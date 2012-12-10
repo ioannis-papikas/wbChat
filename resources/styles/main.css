@@ -1,2 +1,81 @@
-/* CSS Document */
+/*____________________ Main.css ____________________*/
+body {
+	font-family: "Verdana", "Lucida Grande", "Lucida Sans Unicode", sans-serif;
+	font-size:11px;
+	margin:0px;
+	background:url(../images/bg.png) center no-repeat;
+	background-attachment:fixed;
+}
+a, a.visited {
+	text-decoration:none;
+	outline:none;
+}
 
+/*__________ Header __________*/
+.uiMainToolbar {
+	box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+}
+.uiMainToolbar .userControl {
+	position:absolute;
+	top:20px;
+	left:20px;
+	height:80px;
+	min-width:200px;
+	
+	color:#3871E0;
+	font-size:12px;
+	font-weight:bold;
+	cursor:pointer;
+	background-color:rgba(14, 60, 167, 0.05);
+	border:1px solid rgba(56, 113, 224, 0.3);
+	
+	box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+}
+.uiMainToolbar .userControl:hover {
+	border:1px solid rgba(56, 113, 224, 0.8);
+	box-shadow:0px 0px 8px rgba(56, 113, 224, 0.2);
+}
+.userControl .avatar {
+	margin:15px;
+	width:50px;
+	height:50px;
+	float:left;
+	
+	background-color:rgba(255, 255, 255, 0.3);
+}
+.userControl .user {
+	float:left;
+	padding:0px;
+	margin:0px;
+	line-height:80px;
+}
+.uiMainToolbar .signature {
+	position:absolute;
+	top:20px;
+	right:20px;
+	
+	
+	text-align:right;
+	box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+}
+.signature .title {
+	font-weight:bold;
+	font-size:14px;
+}
+/*__________ MainContent __________*/
+.uiMainContent {
+	position:relative;
+	height:100%;
+	padding:10px;
+	padding-top:120px;
+	overflow:auto;
+	box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+}

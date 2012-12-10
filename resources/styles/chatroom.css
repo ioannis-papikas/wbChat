@@ -1,0 +1,9 @@
+/*____________________ chatroom.css ____________________*/
+#messageCenter {
+	position:absolute;
+	top:0px;
+	bottom:0px;
+	height:100%;
+	width:100%;
+	background-color:red;
+}
