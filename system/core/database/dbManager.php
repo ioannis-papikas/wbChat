@@ -8,16 +8,23 @@ require_once 'sql.php';
  */
 class dbManager {
     
-    private $dbConnection;
+    private $db;
     
+    /**
+     * 
+     * @throws UnexpectedValueException if the connection failed
+     */
     public function __construct() {
-        $this->dbConnection = mysql_connect('redback.dyndns-at-home.com', 'jomar', 'fireboy')
-                or die(mysql_error());
+        $this->db = new mysqli('redback.dyndns-at-home.com', 'jomar', 'fireboy', 'chatroom');
+//         $this->db = new mysqli('localhost', 'jomar', 'fireboy');
+        if ($this->db->connect_errno) {
+            throw new UnexpectedValueException($this->db->error);
+        } 
         
     }
     
     public function getConnection(){
-        return $this->dbConnection;
+        return $this->db;
     }
 }
 ?>
