@@ -11,9 +11,7 @@
 <meta name="keywords" content="Web chat, open source, chat engine">
 <meta name="author" content="Jomar">
 <!-- Styles -->
-<link rel="stylesheet" href="<?php echo siteRoot.systemResources; ?>/styles/main.css">
-<link rel="stylesheet" href="<?php echo siteRoot.systemResources; ?>/styles/chatroom.css">
+<link rel="stylesheet" href="<?php echo siteRoot.systemResources; ?>/css.php">
 <!-- Scripts -->
-<script src="<?php echo siteRoot.systemResources; ?>/scripts/jquery.js"></script>
-<script src="<?php echo siteRoot.systemResources; ?>/scripts/chatroom.js"></script>
+<script src="<?php echo siteRoot.systemResources; ?>/js.php"></script>
 </head>

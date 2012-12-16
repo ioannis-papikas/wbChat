@@ -5,6 +5,9 @@
  *
  */
  
+// System Check
+if (!defined("_WBCHAT_PLATFORM_")) throw new Exception("Web Platform is not defined!");
+
 class session
 {
 	const expire = 18000;

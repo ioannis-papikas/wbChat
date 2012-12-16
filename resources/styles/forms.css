@@ -1,0 +1,45 @@
+/*____________________ chatroom.css ____________________*/
+.uiForm {
+	width:650px;
+	margin:0 auto;
+}
+.uiForm.big {
+	font-size:14px;
+}
+.form_row {
+	padding:5px 8px;
+}
+.form_row > .note {
+	font-style:italic;
+	font-size:9px;
+	text-indent:15px;
+	display:inline-block;
+	color:#777;
+}
+.form_row.controls {
+	margin-top:10px;
+	border-top:1px solid #DDD;
+	padding:5px;
+}
+.uiFormHeader {
+	border-bottom:1px solid #CCC;
+}
+.uiFormInput {
+	color:#444;
+	width:400px;
+	display:block;
+}
+.uiForm.big .uiFormInput {
+	font-size:16px;
+	padding:8px;
+}
+.uiFormButton {
+	padding:5px;
+	background-color:rgba(14, 60, 167, 0.1);
+	border:1px solid rgba(56, 113, 224, 0.6);
+	cursor:pointer;
+	box-shadow:0px 0px 8px rgba(166, 166, 166, 1);
+}
+.uiFormButton:hover {
+	border:1px solid rgba(56, 113, 224, 0.9);
+}

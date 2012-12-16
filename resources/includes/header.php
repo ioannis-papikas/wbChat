@@ -1,19 +1,21 @@
 <?php
 // System Check
-if (!defined("_PLATFORM_"))
-	exit();
-	
+if (!defined("_WBCHAT_PLATFORM_")) throw new Exception("Web Platform is not defined!");
+
 // Header Code
-require_once(systemCore."/profile/user.php");
-require_once(systemCore."/state/session.php");
-require_once(systemCore."/state/cookies.php");
+importer::importCore("profile::user");
 
 ?>
 <div class="uiMainHeader">
 	<div class="uiMainToolbar">
-		<div class="userControl">
-			<div class="avatar"></div>
-			<div class="user">Guest</div>
+		<div class="userArea">
+			<div class="userControl">
+				<div class="avatar"></div>
+				<div class="user">Guest</div>
+			</div>
+			<div class="pageTitle">
+				<span class="content"><?php echo $GLOBALS['pageTitle']; ?></span>
+			</div>
 		</div>
 		<div class="signature">
 			<div class="content">

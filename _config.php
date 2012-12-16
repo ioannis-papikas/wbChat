@@ -1,6 +1,6 @@
 <?php
 // Define Platform
-define("_PLATFORM_", 1);
+define("_WBCHAT_PLATFORM_", TRUE);
 
 // Constants Definition
 //_____ Site Root
