@@ -16,7 +16,6 @@ class dbManager {
      */
     public function __construct() {
         $this->db = new mysqli('redback.dyndns-at-home.com', 'jomar', 'fireboy', 'chatroom');
-//         $this->db = new mysqli('localhost', 'jomar', 'fireboy');
         if ($this->db->connect_errno) {
             throw new UnexpectedValueException($this->db->error);
         } 
