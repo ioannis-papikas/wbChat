@@ -1,23 +1,19 @@
 <?php
 require_once 'system/core/database/dbmanager.php';
-
+try {
 $db = new dbManager();
-if ( !is_resource( $db->getConnection() ) ) {
-    echo 'error';
-} else {
-    echo 'ok';
+} catch (UnexpectedValueException $ex) {
+    echo $ex->getMessage();
 }
 
-$sql = new SqlQueryCreator();
-$columns = array(
-    'A' => array('name')
-);
-$stmt = $sql->select($columns);
-if ($stmt === 'SELECT `A`' . '.`name`') {
-    echo 'sql ok';
-} else {
-    echo 'sql failed';
-}
+$queryCreator = new SqlQueryCreator();
+$queryCreator->selectFromTables(array(
+    'tableA' => array(
+        'colA1', 'colA2'
+    )
+));
+$queryCreator->from('tableA', 'a');
+echo $queryCreator->getStatement();
 
 ?>
 
