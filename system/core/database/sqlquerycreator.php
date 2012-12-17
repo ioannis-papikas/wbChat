@@ -4,7 +4,6 @@
  * Creates SQL queries.
  * 
  * @author Marios
- * @version 0.4
  */
 class SqlQueryCreator {
 
@@ -37,6 +36,7 @@ class SqlQueryCreator {
 
     /**
      * Adds an AND clause to the statement.
+     * 
      * @param string $condition The condition to be added as an AND clause.
      * @return SqlQueryCreator This SqlQueryCreator for method call chaining.
      * @throws InvalidArgumentException if the condition is empty (in the PHP
@@ -74,6 +74,12 @@ class SqlQueryCreator {
             if (!empty($this->clauses['inner_join'])) {
                 $queryArr[] = implode(' ', $this->clauses['inner_join']);
             }
+            if (!empty($this->clauses['left_join'])) {
+                $queryArr[] = implode(' ', $this->clauses['left_join']);
+            }
+            if (!empty($this->clauses['right_join'])) {
+                $queryArr[] = implode(' ', $this->clauses['right_join']);
+            }
         }
         if (!empty($this->clauses['where'])) {
             $queryArr[] = 'WHERE ' . implode(' ', $this->clauses['where']);
@@ -81,12 +87,19 @@ class SqlQueryCreator {
         if (!empty($this->clauses['group_by'])) {
             $queryArr[] = 'GROUP BY ' . implode(', ', $this->clauses['group_by']);
         }
+        if (!empty($this->clauses['sort_by'])) {
+            $queryArr[] = 'SORT BY ' . implode(', ', $this->clauses['sort_by']);
+        }
+        if (!empty($this->clauses['having'])) {
+            $queryArr[] = 'HAVING ' . implode(' ', $this->clauses['having']);
+        }
         
         $this->query = implode(' ', $queryArr) . ';';
     }
 
     /**
      * Adds a FROM clause to the statement.
+     * 
      * @param string $tableName The name of the table to be added to the FROM clause.
      * @param string $alias The alias of the added table.
      * @return SqlQueryCreator This SqlQueryCreator for method call chaining.
@@ -157,15 +170,28 @@ class SqlQueryCreator {
     }
 
     /**
+     * Adds a HAVING clause.
      * 
-     * @param $condition
+     * @param string $condition The condition to be added to the HAVING clause.
+     * @param string $operator The operator used for the condition concatenation.
+     * @return SqlQueryCreator This SqlQueryCreator for method call chaining.
+     * @throws InvalidArgumentException if no condition is provided
      */
-    function having($condition) {
+    public function having($condition, $operator = 'AND') {
+        if (empty($condition)) {
+            throw new InvalidArgumentException(
+                    'Cannot add an empty condition to the HAVING clause.');
+        }
         
+        $this->clauses['having'][] = empty($this->clauses['having']) ? $condition
+                : $operator . ' ' . $condition;
+        
+        return $this;
     }
 
     /**
      * Adds an INNER JOIN clause to the query.
+     * 
      * @param string $tableName The name of the table to join to an already
      * specified one.
      * @param string $alias The alias used for the joining table.
@@ -199,35 +225,93 @@ class SqlQueryCreator {
     }
 
     /**
+     * Adds a LEFT JOIN clause.
      * 
-     * @param string $tableName
-     * @param string $alias
-     * @param string $condition
+     * @param string $tableName The name of the table to join to an already
+     * specified one.
+     * @param string $alias The alias used for the joining table.
+     * @param string $condition The condition the join is based upon.
+     * @return SqlQueryCreator This SqlQueryCreator for method call chaining.
      */
-    function leftJoin($tableName, $alias, $condition) {
+    public function leftJoin($tableName, $alias, $condition) {
+        if (empty($tableName) ) {
+            throw new InvalidArgumentException(
+                    'Cannot join unnamed table.');
+        }
+        if (empty($condition)) {
+            throw new InvalidArgumentException(
+                    'Cannot perform join based upon no condition.');
+        }
+        if (empty($this->clauses['from'])) {
+            throw new RuntimeException(
+                    'Cannot perform join when no other table has been specified, so far.');
+        }
         
+        $clause = 'LEFT JOIN `' . $tableName . '`';
+        $clause .= !empty($alias) ? ' AS ' . $alias : '';
+        $clause .= ' ON ' . $condition;
+        $this->clauses['left_join'][] = $clause;
+        
+        return $this;
     }
 
     /**
+     * Adds an AND clause to the statement.
      * 
-     * @param condition
+     * @param string $condition The condition to be added as an OR clause.
+     * @return SqlQueryCreator This SqlQueryCreator for method call chaining.
+     * @throws InvalidArgumentException if the condition is empty (in the PHP
+     * sense)
      */
-    function orCondition($condition) {
+    public function orCondition($condition) {
+        if (empty($condition)) {
+            throw new InvalidArgumentException(
+                    'Cannot add empty OR clause.');
+        }
         
+        if (empty($this->clauses['where'])) {
+            $this->clauses['where'] = array($condition);
+        } else {
+            $this->clauses['where'][] = 'OR ' . $condition;
+        }
+        
+        return $this;
     }
 
     /**
+     * Adds a RIGHT JOIN clause.
      * 
-     * @param string $tableName
-     * @param string $alias
-     * @param string $condition
+     * @param string $tableName The name of the table to join to an already
+     * specified one.
+     * @param string $alias The alias used for the joining table.
+     * @param string $condition The condition the join is based upon.
+     * @return SqlQueryCreator This SqlQueryCreator for method call chaining.
      */
-    function rightJoin($tableName, $alias, $condition) {
+    public function rightJoin($tableName, $alias, $condition) {
+        if (empty($tableName) ) {
+            throw new InvalidArgumentException(
+                    'Cannot join unnamed table.');
+        }
+        if (empty($condition)) {
+            throw new InvalidArgumentException(
+                    'Cannot perform join based upon no condition.');
+        }
+        if (empty($this->clauses['from'])) {
+            throw new RuntimeException(
+                    'Cannot perform join when no other table has been specified, so far.');
+        }
         
+        $clause = 'RIGHT JOIN `' . $tableName . '`';
+        $clause .= !empty($alias) ? ' AS ' . $alias : '';
+        $clause .= ' ON ' . $condition;
+        $this->clauses['left_join'][] = $clause;
+        
+        return $this;
     }
 
     /**
      * Adds a "SELECT *" clause to the query.
+     * 
      * @return SqlQueryCreator This SqlQueryCreator for method call chaining.
      */
     public function selectAll() {
@@ -238,6 +322,7 @@ class SqlQueryCreator {
 
     /**
      * Adds a SELECT clause for a function (e.g., MAX()).
+     * 
      * @param string $functionCode The code of the function to be added to the clause.
      * @return SqlQueryCreator This SqlQueryCreator for method call chaining.
      */
@@ -254,7 +339,7 @@ class SqlQueryCreator {
 
     /**
      * Adds a specific table's column to the SELECT clause.
-     *
+     * 
      * @param string $tableName The name of the table whose column will be added.
      * @param string $columnName The name of the column to be added.
      * @param string $alias The alias used for the column (optional).
@@ -317,11 +402,48 @@ class SqlQueryCreator {
     }
 
     /**
+     * Adds a column to the SORT BY clause.
      * 
-     * @param string $columnName
+     * @param string $columnName The name of the column used for sorting the
+     * results.
+     * @return SqlQueryCreator This SqlQueryCreator for method call chaining.
+     * @throws InvalidArgumentException if the column name is empty (in the PHP
+     * sense)
      */
-    function sortBy($columnName) {
-        
+    public function sortBy($columnName) {
+        if (empty($columnName)) {
+            throw new InvalidArgumentException(
+                    'Cannot sort by an unnamed column.');
+        }
+
+        $this->clauses['sort_by'][] = '`' . $columnName . '`';
+
+        return $this;
+    }
+    
+    /**
+     * Adds a column of a specific table to the SORT BY clause.
+     * 
+     * @param string $tableName The name of the table the given column belongs to.
+     * @param string $columnName The name of the column used for sorting the
+     * results.
+     * @return SqlQueryCreator This SqlQueryCreator for method call chaining.
+     * @throws InvalidArgumentException if either the table or the column name
+     * is empty (in the PHP sense)
+     */
+    public function sortByTableColumn($tableName, $columnName) {
+        if (empty($tableName)) {
+            throw new InvalidArgumentException(
+                    'Cannot sort by a column of an unnamed table.');
+        }
+        if (empty($columnName)) {
+            throw new InvalidArgumentException(
+                    'Cannot sort by an unnamed column.');
+        }
+
+        $this->clauses['sort_by'][] = '`' . $tableName . '`.`' . $columnName . '`';
+
+        return $this;
     }
 
     /**
