@@ -3,7 +3,7 @@ body {
 	font-family: "Verdana", "Lucida Grande", "Lucida Sans Unicode", sans-serif;
 	font-size:11px;
 	margin:0px;
-	background:url(../images/bg.png) center no-repeat;
+	background:url(images/bg.png) center no-repeat;
 	background-attachment:fixed;
 	height:100%;
 	overflow:auto;
@@ -18,10 +18,22 @@ a, a.visited {
 	position:relative;
 	padding-top:120px;
 }
-.uiMainToolbar .userControl {
+.uiMainToolbar {
+	min-width:1000px;
+}
+.uiMainToolbar .userArea {
 	position:absolute;
 	top:20px;
 	left:20px;
+	
+	z-index:5;
+	box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+}
+.userArea > .userControl {
+	float:left;
+	overflow:auto;
 	height:80px;
 	min-width:200px;
 	
@@ -31,29 +43,36 @@ a, a.visited {
 	cursor:pointer;
 	background-color:rgba(14, 60, 167, 0.05);
 	border:1px solid rgba(56, 113, 224, 0.3);
-	
-	box-sizing:border-box;
-	-webkit-box-sizing:border-box;
-	-moz-box-sizing:border-box;
-	z-index:5;
 }
-.uiMainToolbar .userControl:hover {
+.userArea >  .userControl:hover {
 	border:1px solid rgba(56, 113, 224, 0.8);
 	box-shadow:0px 0px 8px rgba(56, 113, 224, 0.2);
 }
-.userControl .avatar {
+.userArea > .userControl .avatar {
 	margin:15px;
 	width:50px;
 	height:50px;
 	float:left;
-	
 	background-color:rgba(255, 255, 255, 0.3);
 }
-.userControl .user {
+.userArea > .userControl .user {
 	float:left;
 	padding:0px;
 	margin:0px;
 	line-height:80px;
+}
+.userArea > .pageTitle {
+	float:left;
+	overflow:auto;
+	height:80px;
+	min-width:200px;
+	
+	color:#3871E0;
+	font-size:12px;
+	font-weight:bold;
+	line-height:80px;
+	margin-left:50px;
+	font-size:18px;
 }
 .uiMainToolbar .signature {
 	position:absolute;
