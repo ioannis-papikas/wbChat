@@ -4,7 +4,7 @@ define("_WBCHAT_PLATFORM_", TRUE);
 
 // Constants Definition
 //_____ Site Root
-define("siteRoot", "/___projects/wbChat");
+define("siteRoot", "wbChat");
 
 //_____ System Root
 define("systemRoot", $_SERVER['DOCUMENT_ROOT'].siteRoot);
