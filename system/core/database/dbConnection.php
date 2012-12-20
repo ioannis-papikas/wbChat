@@ -66,6 +66,10 @@ class dbConnection {
         return $this->dbConnector->seek($resource, $row);
     }
 
+    public function getConnector() {
+        return $this->dbConnector;
+    }
+    
     // Returns the count of rows of the given resource
     public function get_num_rows($resource) {
         return $this->dbConnector->get_num_rows($resource);
