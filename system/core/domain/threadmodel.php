@@ -1,9 +1,7 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+require_once systemCore . '/database/sqlquerycreator.php';
+require_once systemCore . '/database/dbConnection.php';
 
 /**
  * Description of thread
