@@ -56,6 +56,20 @@ class SqlQueryCreator {
         
         return $this;
     }
+    
+    /**
+     * 
+     * @param string $tableName
+     * @param array $values
+     * @return string The "insert" query.
+     */
+    public function getInsertQuery($tableName, $values) {
+        $values = implode(', ', $values);
+        $query = 'INSERT INTO `' . $tableName . '` '
+            . 'VALUES (' . $values . ');';
+        
+        return $query;
+    }
 
     /**
      * Creates the query with the clauses defined, so far.
