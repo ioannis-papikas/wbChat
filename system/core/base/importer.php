@@ -59,7 +59,7 @@ class importer
 	public static function includeConfig($path)
 	{
 		// Normalize path
-		$ns_path = systemRoot.systemRoot."/system/configuration/".str_replace("::", "/", $path).".inc";
+		$ns_path = systemRoot."/system/configuration/".str_replace("::", "/", $path).".inc";
 
 		if (file_exists($ns_path))
 			return require_once($ns_path);
