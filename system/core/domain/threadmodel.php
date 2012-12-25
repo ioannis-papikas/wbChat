@@ -1,88 +1,66 @@
 <?php
 
-require_once systemCore . '/database/sqlquerycreator.php';
-require_once systemCore . '/database/dbConnection.php';
+//require_once systemCore . '/database/sqlquerycreator.php';
+//require_once systemCore . '/database/dbConnection.php';
+//require_once systemCore . '/database/sqlQuery.php';
+
+// System Check
+if (!defined("_WBCHAT_PLATFORM_")) throw new Exception("Web Platform is not defined!");
+
+// Imports
+importer::importCore("domain::model");
+importer::importCore('domain::threadtypemodel');
+importer::importCore('domain::threadrecipientsmodel');
 
 /**
  * Description of thread
  *
+ * @author John
  * @author Marios
  */
-class ThreadModel {
-
+class ThreadModel extends Model {
+    
     private $dateCreated;
     private $subject;
     private $threadTypeId;
 
     public function __construct() {
+        parent::__construct();
+        $this->table = 'thread';
+        
         $this->threadTypeId = 0;
         $this->subject = '';
         $this->dateCreated = null;
     }
 
     /**
+     * Saves a new User.
      * 
-     * @param string $threadType
+     * @param string $threadDesc
      * @param string $subject
      * @param array $userIds
-     * @throws UnexpectedValueException if the thread type specified is unknown.
+     * @throws UnexpectedValueException if the thread description specified is unknown.
      */
-    public function saveNew($threadType, $subject, $userIds) {
-        $threadTypeId = $this->getThreadTypeId($threadType);
-        if ($threadTypeId === 0) {
+    public function saveNew($threadDesc, $subject, $userIds) {
+        $threadTypeModel = new ThreadTypeModel();
+        $threadType = $threadTypeModel->findByDescription($threadDesc);
+        if ($threadType === null) {
             throw new UnexpectedValueException(
-                    'Unknown thread type: ' . $threadType);
+                    'Unknown thread description: ' . $threadDesc);
         }
 
         $sqc = new SqlQueryCreator();
-        $query = $sqc->getInsertQuery('threadtype', array(
-            'NULL', $threadTypeId, $subject, date('Y-m-d H:i:s', time())
+        $threadQuery = $sqc->getInsertQuery($this->table, array(
+            'NULL', $threadType['id'], $subject, date('Y-m-d H:i:s', time())
         ));
-        
-        $dbc = new dbConnection();
-        $dbc->execute_query($query);
+        $dbc = $this->getDbConnection();
+        $dbc->execute_query($threadQuery);
         $dbLink = $dbc->getConnector()->getConnection();
         $threadId = mysqli_insert_id($dbLink);
         
-        $this->saveUsers($userIds, $threadId);
+        $threadRecipientsModel = new ThreadRecipientsModel();
+        $threadRecipientsModel->saveAll($userIds, $threadId);
     }
-
-    /**
-     * 
-     * @param string $threadType
-     * @return int The ID of the specified thread type or zero (0) if no such
-     * type exists.
-     */
-    private function getThreadTypeId($threadType) {
-        $sqc = new SqlQueryCreator();
-        $sqc->selectTableColumn('threadtype', 'id')
-                ->from('threadtype')
-                ->where('description = ' . $threadType)
-                ->createQuery();
-
-        $dbc = new dbConnection();
-        $result = $dbc->execute_query($sqc->getQuery(), 0);
-        if ($result) {
-            $row = $row = $result->fetchAssoc();
-            if ($row) {
-                return $row['id'];
-            }
-        }
-
-        return 0;
-    }
-
-    private function saveUsers($userIds, $threadId) {
-        foreach ($userIds as $userId) {
-            $sqc = new SqlQueryCreator();
-            $query = $sqc->getInsertQuery('threadrecipients', array(
-                $threadId, $userId));
-
-            $dbc = new dbConnection();
-            $dbc->execute_query($query, 0);
-        }
-    }
-
 }
 
 ?>
