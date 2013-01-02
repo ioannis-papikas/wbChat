@@ -1,0 +1,37 @@
+/*____________________ ui.css ____________________*/
+/*____________________ notification ____________________*/
+.notification {
+	background-color:rgba(166, 166, 166, 0.2);
+	border:1px solid rgba(166, 166, 166, 1);
+	box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+}
+.notification > .header {
+	background-color:#FFF;
+	padding:5px;
+	border-bottom:1px solid rgba(166, 166, 166, 1);
+	margin:0px;
+}
+.notification > .body {
+	padding:5px;
+}
+
+.notification.error {
+	background-color:rgba(192, 4, 3, 0.2);
+	border:1px solid rgba(192, 4, 3, 1);
+}
+.notification.error .header {
+	background-color: rgba(192,4,3,0.30);
+	border-bottom: 1px solid rgba(192,4,3,0.35);
+}
+.notification.error > .body { background-color: #F6DAD9; }
+.notification.success {
+	background-color:rgba(192, 4, 3, 0.2);
+	border: 1px solid rgba(85,142,54,1);
+}
+.notification.success .header {
+	background-color: rgba(130,189,75,0.30);
+	border-bottom: 1px solid rgba(130,189,75,0.35);
+}
+.notification.success > .body { background-color: #ECF5E4; }

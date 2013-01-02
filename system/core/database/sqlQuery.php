@@ -9,10 +9,6 @@
 class sqlQuery {
 
     private $query;
-
-    public function sqlQuery($query) {
-        $this->query = $query;
-    }
     
     public function set_query($query) {
         $this->query = $query;

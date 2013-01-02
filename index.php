@@ -3,10 +3,6 @@
 // Require System Configuration
 require_once("_config.php");
 
-require_once systemCore . '/domain/threadmodel.php';
-$thread = new ThreadModel();
-$thread->saveNew('test', 'Example subject.', array(1, 2));
-
 ?>
 <!DOCTYPE>
 <html>

@@ -1,6 +1,67 @@
 <?php
 // Require System Configuration
 require_once("_config.php");
+
+// Import System Classes
+importer::importCore("base::DOM");
+importer::importCore("profile::user");
+importer::importCore("content::validator");
+importer::importCore("ui::notification");
+
+// Set Page Title
+$GLOBALS['pageTitle'] = "Σύνδεση Χρήστη";
+
+if ($_SERVER['REQUEST_METHOD'] == "POST")
+{
+	// Check required fields
+	$has_error = FALSE;
+	$errors = array();
+	
+	// Check Login Data
+	if (validator::_empty($_POST['username']) || validator::_empty($_POST['password']))
+	{
+		$errors[] = "Παρακαλώ εισάγετε όλα τα στοιχεία.";
+		$has_error = TRUE;
+	}
+	
+	if ($has_error)
+	{
+		$ntf = new notification("error");
+		$ntf->set_header("Σφάλματα κατά την σύνδεση");
+		
+		// Create Error List
+		$errList = DOM::create("ul");
+		$ntf->set_body($errList);
+		
+		// Create error elemeents
+		foreach($errors as $err)
+		{
+			$errItem = DOM::create("li", $err);
+			DOM::append($errList, $errItem);
+		}
+	}
+	else
+	{
+		// Login user
+		$success = user::login($_POST['username'], $_POST['password']);
+		if (!$success)
+		{
+			$ntf = new notification("error");
+			$ntf->set_header("Σφάλμα κατά την σύνδεση");
+			
+			// Create Error List
+			$msg = DOM::create("p", "Το όνομα χρήστη ή/και ο κωδικός πρόσβασης είναι λανθασμένα. Παρακαλώ δοκιμάστε ξανά.");
+			$ntf->set_body($msg);
+		}
+		else
+		{
+			$profile = user::profile();
+			header('Location: index.php');
+			return;
+		}
+	}
+}
+
 ?>
 <!DOCTYPE>
 <html>
@@ -8,51 +69,19 @@ require_once("_config.php");
 <body>
 	<?php importer::includeResource("header"); ?>
 	<div class="uiMainContent">
-		<form id="login" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" class="uiForm" role="contact" locale="el_GR" data-validation='{"mode":"verbose"}' data-captcha="true">
-			<div class="form_report"></div>
-			<div class="uiFormHeader">Στοιχεία επικοινωνίας</div>
-				<div class="form_row">
-					<label id="lbl_firstname" for="inp_firstname" class="uiFormLabel required"><span class="required">*</span>Όνομα</label>
-				</div>
-					<input id="inp_firstname" name="firstname" type="text" value="" autofocus class="uiFormInput required" data-fann-info='{"title":"Όνομα","desc":"Παρακαλώ εισάγετε το όνομά σας."}'/>
-				<div class="form_row">
-					<label id="lbl_lastname" for="inp_lastname" class="uiFormLabel required"><span class="required">*</span>Επώνυμο</label>
-				</div>
-				<div class="form_row">
-					<input id="inp_lastname" name="lastname" type="text" value="" class="uiFormInput required" data-fann-info='{"title":"Επώνυμο","desc":"Παρακαλώ εισάγετε το επώνυμό σας."}'/>
-				</div>
-				<div class="form_row">
-					<label id="lbl_companyname" for="inp_companyname" class="uiFormLabel">Επωνυμία</label>
-				</div>
-				<div class="form_row">
-					<input id="inp_companyname" name="companyname" type="text" value="" class="uiFormInput" data-fann-info='{"title":"Επωνυμία","desc":"Παρακαλώ εισάγετε την επωνυμία της εταιρία σας (εάν υπάρχει)."}'/>
-				</div>
-				<div class="form_row">
-					<label id="lbl_phone" for="inp_phone" class="uiFormLabel">Τηλέφωνο Επικοινωνίας</label>
-				</div>
-				<div class="form_row">
-					<input id="inp_phone" name="phone" type="text" value="" class="uiFormInput" data-fann-info='{"title":"Τηλέφωνο Επικοινωνίας","desc":"Παρακαλώ εισάγετε το τηλέφωνο επικοινωνίας σας (εάν επιθυμείτε να σας καλέσουμε)."}'/>
-				</div>
-				<div class="form_row">
-					<label id="lbl_email" for="inp_email" class="uiFormLabel required"><span class="required">*</span>Email</label>
-				</div>
-				<div class="form_row">
-					<input id="inp_email" name="email" type="email" value="" class="uiFormInput required" data-fann-info='{"title":"Email","desc":"Παρακαλώ εισάγετε το email σας."}'/>
-				</div>
-				<div class="form_row">
-					<label id="lbl_address" for="inp_address" class="uiFormLabel">Διεύθυνση</label>
-				</div>
-				<div class="form_row">
-					<input id="inp_address" name="address" type="text" value="" class="uiFormInput" data-fann-info='{"title":"Διεύθυνση","desc":"Παρακαλώ εισάγετε τη διεύθυνσή σας."}'/>
-				</div>
-				<div class="form_row">
-					<label id="lbl_comments" for="cst_comments" class="uiFormLabel"><span class="required">*</span>Σχόλια</label>
-				</div>
-				<div class="form_row">
-					<textarea id="cst_comments" name="comments" type="textarea" value="" class="uiFormInput required" data-fann-info='{"title":"Σχόλια","desc":"Παρακαλώ εισάγετε το κείμενο που θέλετε."}'></textarea>
-				</div>
-			<div class="captcha">
-				<div class="uiAppToolContainer" data-tool='{"code":"3", "domain":"eBuilder"}' data-attr='{"locale":"el_GR"}'></div>
+		<form id="register" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" class="uiForm big" role="register" locale="el_GR">
+			<div class="form_report">
+				<?php
+					if (isset($ntf))
+						echo $ntf->getHTML();
+				?>
+			</div>
+			<div class="uiFormHeader">Συνδεση</div>
+			<div class="form_row">
+				<input id="inp_username" name="username" type="text" class="uiFormInput required" placeholder="* Όνομα Χρήστη" value="<?php echo $_POST['username'];?>" autofocus />
+			</div>
+			<div class="form_row">
+				<input id="inp_password" name="password" type="password" value="" class="uiFormInput required" placeholder="* Κωδικός Πρόσβασης" />
 			</div>
 			<div class="form_row controls">
 				<button id="btn_submit" type="submit" class="uiFormButton positive" >Αποστολή</button>

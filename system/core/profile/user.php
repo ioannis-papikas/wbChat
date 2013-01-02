@@ -20,7 +20,7 @@ class user
 	public static function login($username, $password, $rememberDuration = 0)
 	{
 		$user = self::authenticate($username, $password);
-		
+
 		if (!is_null($user))
 		{
 			session::set("id", $user['id'], "user");
@@ -42,7 +42,6 @@ class user
 		
 		$username = $dbc->clear_resource($username);
 		$password = $dbc->clear_resource($password);
-		$password = hash("SHA256", $password);
 
 		$dbq->set_query("SELECT * FROM user WHERE username = '$username' AND password = '$password'");
 		$result = $dbc->execute_query($dbq);
@@ -65,18 +64,14 @@ class user
 		// If a cookie is missing, clear all relative cookies
 		if (!isset($user_id))
 		{
-			self::logout();
+			//self::logout();
 			return NULL;
 		}
 		
 		$dbc = new dbConnection();
 		$dbq = new sqlQuery();
-		
-		$username = $dbc->clear_resource($username);
-		$password = $dbc->clear_resource($password);
-		$password = hash("SHA256", $password);
 
-		$dbq->set_query("SELECT * FROM user WHERE id = '$user_id'");
+		$dbq->set_query("SELECT * FROM user WHERE id = $user_id");
 		$result = $dbc->execute_query($dbq);
 		$user = $dbc->fetch($result);
 

@@ -13,7 +13,6 @@ class cookies
 	// Create a new cookie
 	public static function set($name, $value, $expiration = 0, $path = "/", $domain = "", $secure = FALSE, $httpOly = FALSE)
 	{
-		$domain = ($domain == "" ? $_SERVER['HTTP_HOST'] : $domain);
 		if ($expiration == 0)
 			return self::_create_session($name, $value, 0, $path, $domain, $secure, $httpOly);
 		else if (setcookie($name, $value, time() + $expiration, $path, $domain, ($secure ? 1 : 0), ($httpOly ? 1 : 0)))

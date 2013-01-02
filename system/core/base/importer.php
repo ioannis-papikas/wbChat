@@ -7,7 +7,7 @@
 
 class importer
 {
-	// Import a System's Class
+	// Import a System Core's Class
 	public static function importCore($path)
 	{
 		// Normalize path
@@ -62,7 +62,7 @@ class importer
 		$ns_path = systemRoot."/system/configuration/".str_replace("::", "/", $path).".inc";
 
 		if (file_exists($ns_path))
-			return require_once($ns_path);
+			return require($ns_path);
 		else
 			throw new Exception("Resources file $path doesn't exist for import.");
 	}

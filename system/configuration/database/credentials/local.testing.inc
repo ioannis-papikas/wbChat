@@ -5,7 +5,7 @@
  */
 
 $config = array();
-$config['server'] = "192.168.1.201";
+$config['server'] = "redback.dyndns-at-home.com";
 $config['username'] = "jomar";
 $config['password'] = "fireboy";
 $config['database'] = "chatroom";
