@@ -5,7 +5,7 @@
  * 
  * @author Marios
  */
-class SqlQueryCreator {
+class SqlBuilder {
 
     /**
      * @var array The clauses of the query (e.g., select).
@@ -38,7 +38,7 @@ class SqlQueryCreator {
      * Adds an AND clause to the statement.
      * 
      * @param string $condition The condition to be added as an AND clause.
-     * @return SqlQueryCreator This SqlQueryCreator for method call chaining.
+     * @return SqlBuilder This SqlQueryCreator for method call chaining.
      * @throws InvalidArgumentException if the condition is empty (in the PHP
      * sense)
      */
@@ -102,7 +102,7 @@ class SqlQueryCreator {
      * 
      * @param string $tableName The name of the table to be added to the FROM clause.
      * @param string $alias The alias of the added table.
-     * @return SqlQueryCreator This SqlQueryCreator for method call chaining.
+     * @return SqlBuilder This SqlQueryCreator for method call chaining.
      * @throws InvalidArgumentException if table name is empty (in the PHP sense)
      */
     public function from($tableName, $alias = '') {
@@ -120,12 +120,14 @@ class SqlQueryCreator {
     /**
      * 
      * @param string $tableName
+     * @param array $columns
      * @param array $values
      * @return string The "insert" query.
      */
-    public function getInsertQuery($tableName, $values) {
+    public function getInsertStatement($tableName, $columns, $values) {
+        $columns = implode(', ', $columns);
         $values = implode(', ', $values);
-        $query = 'INSERT INTO `' . $tableName . '` '
+        $query = 'INSERT INTO `' . $tableName . '` (' . $columns . ')'
             . 'VALUES (' . $values . ');';
         
         return $query;
@@ -145,7 +147,7 @@ class SqlQueryCreator {
      * 
      * @param string $columnName The name of the column used for grouping the
      * results.
-     * @return SqlQueryCreator This SqlQueryCreator for method call chaining.
+     * @return SqlBuilder This SqlQueryCreator for method call chaining.
      * @throws InvalidArgumentException if the column name is empty (in the PHP
      * sense)
      */
@@ -166,7 +168,7 @@ class SqlQueryCreator {
      * @param string $tableName The name of the table the given column belongs to.
      * @param string $columnName The name of the column used for grouping the
      * results.
-     * @return SqlQueryCreator This SqlQueryCreator for method call chaining.
+     * @return SqlBuilder This SqlQueryCreator for method call chaining.
      */
     public function groupByTableColumn($tableName, $columnName) {
         if (empty($tableName)) {
@@ -188,7 +190,7 @@ class SqlQueryCreator {
      * 
      * @param string $condition The condition to be added to the HAVING clause.
      * @param string $operator The operator used for the condition concatenation.
-     * @return SqlQueryCreator This SqlQueryCreator for method call chaining.
+     * @return SqlBuilder This SqlQueryCreator for method call chaining.
      * @throws InvalidArgumentException if no condition is provided
      */
     public function having($condition, $operator = 'AND') {
@@ -210,7 +212,7 @@ class SqlQueryCreator {
      * specified one.
      * @param string $alias The alias used for the joining table.
      * @param string $condition The condition the join is based upon.
-     * @return SqlQueryCreator This SqlQueryCreator for method call chaining.
+     * @return SqlBuilder This SqlQueryCreator for method call chaining.
      * @throws InvalidArgumentException if either the table name or the condition
      * is empty (in the PHP sense)
      * @throws RuntimeException if no call to the {@link #from()} method has
@@ -245,7 +247,7 @@ class SqlQueryCreator {
      * specified one.
      * @param string $alias The alias used for the joining table.
      * @param string $condition The condition the join is based upon.
-     * @return SqlQueryCreator This SqlQueryCreator for method call chaining.
+     * @return SqlBuilder This SqlQueryCreator for method call chaining.
      */
     public function leftJoin($tableName, $alias, $condition) {
         if (empty($tableName) ) {
@@ -273,7 +275,7 @@ class SqlQueryCreator {
      * Adds an AND clause to the statement.
      * 
      * @param string $condition The condition to be added as an OR clause.
-     * @return SqlQueryCreator This SqlQueryCreator for method call chaining.
+     * @return SqlBuilder This SqlQueryCreator for method call chaining.
      * @throws InvalidArgumentException if the condition is empty (in the PHP
      * sense)
      */
@@ -299,7 +301,7 @@ class SqlQueryCreator {
      * specified one.
      * @param string $alias The alias used for the joining table.
      * @param string $condition The condition the join is based upon.
-     * @return SqlQueryCreator This SqlQueryCreator for method call chaining.
+     * @return SqlBuilder This SqlQueryCreator for method call chaining.
      */
     public function rightJoin($tableName, $alias, $condition) {
         if (empty($tableName) ) {
@@ -326,7 +328,7 @@ class SqlQueryCreator {
     /**
      * Adds a "SELECT *" clause to the query.
      * 
-     * @return SqlQueryCreator This SqlQueryCreator for method call chaining.
+     * @return SqlBuilder This SqlQueryCreator for method call chaining.
      */
     public function selectAll() {
         $this->clauses['select'] = array('*');
@@ -338,7 +340,7 @@ class SqlQueryCreator {
      * Adds a SELECT clause for a function (e.g., MAX()).
      * 
      * @param string $functionCode The code of the function to be added to the clause.
-     * @return SqlQueryCreator This SqlQueryCreator for method call chaining.
+     * @return SqlBuilder This SqlQueryCreator for method call chaining.
      */
     public function selectFunction($functionCode) {
         if (empty($functionCode)) {
@@ -357,7 +359,7 @@ class SqlQueryCreator {
      * @param string $tableName The name of the table whose column will be added.
      * @param string $columnName The name of the column to be added.
      * @param string $alias The alias used for the column (optional).
-     * @return SqlQueryCreator This SqlQueryCreator for method call chaining.
+     * @return SqlBuilder This SqlQueryCreator for method call chaining.
      * @throws InvalidArgumentException if either the table or the column name
      * is empty (in the PHP sense)
      */
@@ -387,7 +389,7 @@ class SqlQueryCreator {
      * @param array $columnNames The columns to be added to the clause.
      * @param array $columnAliases The aliases of the columns to be added to the
      * clause.
-     * @return SqlQueryCreator This SqlQueryCreator for method call chaining.
+     * @return SqlBuilder This SqlQueryCreator for method call chaining.
      * @throws InvalidArgumentException if either the arrays of column names and
      * aliases are of different length or a table or column name is empty (in the
      * PHP sense)
@@ -420,7 +422,7 @@ class SqlQueryCreator {
      * 
      * @param string $columnName The name of the column used for sorting the
      * results.
-     * @return SqlQueryCreator This SqlQueryCreator for method call chaining.
+     * @return SqlBuilder This SqlQueryCreator for method call chaining.
      * @throws InvalidArgumentException if the column name is empty (in the PHP
      * sense)
      */
@@ -441,7 +443,7 @@ class SqlQueryCreator {
      * @param string $tableName The name of the table the given column belongs to.
      * @param string $columnName The name of the column used for sorting the
      * results.
-     * @return SqlQueryCreator This SqlQueryCreator for method call chaining.
+     * @return SqlBuilder This SqlQueryCreator for method call chaining.
      * @throws InvalidArgumentException if either the table or the column name
      * is empty (in the PHP sense)
      */
@@ -464,7 +466,7 @@ class SqlQueryCreator {
      * Adds a condition to the WHERE clause.
      * 
      * @param string $condition The condition to be used for row filtering.
-     * @return SqlQueryCreator This SqlQueryCreator for method call chaining.
+     * @return SqlBuilder This SqlQueryCreator for method call chaining.
      */
     public function where($condition) {
         if (empty($condition)) {
