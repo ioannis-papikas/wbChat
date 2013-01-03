@@ -40,8 +40,8 @@ class ThreadRecipientsModel extends Model {
         
         $dbc = $this->getDbConnection();
         foreach ($recipientIds as $recipientId) {
-            $sqc = new SqlQueryCreator();
-            $query = $sqc->getInsertQuery($this->table, array(
+            $sqc = new SqlBuilder();
+            $query = $sqc->getInsertStatement($this->table, array(
                 $threadId, $recipientId));
 
             $dbc->execute_query(new sqlQuery($query), 0);

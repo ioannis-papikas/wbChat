@@ -19,7 +19,7 @@ class UserModel {
      * @return mixed false on failure; a {@link mysqli_result}, otherwise
      */
     public static function getUsers() {
-        $sqc = new SqlQueryCreator();
+        $sqc = new SqlBuilder();
         $sqc->selectTableColumns('user', array('id', 'username'), array('', ''))
             ->from('user')
             ->createQuery();

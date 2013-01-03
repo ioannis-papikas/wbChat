@@ -33,7 +33,7 @@ class ThreadTypeModel extends Model {
                     'Cannot search for ThreadType with empty description.');
         }
         
-        $sqc = new SqlQueryCreator();
+        $sqc = new SqlBuilder();
         $sqc->selectTableColumn($this->table, 'id')
                 ->from($this->table)
                 ->where('`description` = "' . $description . '"')

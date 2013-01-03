@@ -49,8 +49,8 @@ class ThreadModel extends Model {
                     'Unknown thread description: ' . $threadDesc);
         }
 
-        $sqc = new SqlQueryCreator();
-        $threadQuery = $sqc->getInsertQuery($this->table, array(
+        $sqc = new SqlBuilder();
+        $threadQuery = $sqc->getInsertStatement($this->table, array(
             'NULL', $threadType['id'], $subject, date('Y-m-d H:i:s', time())
         ));
         $dbc = $this->getDbConnection();
