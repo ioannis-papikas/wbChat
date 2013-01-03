@@ -1,7 +1,12 @@
 <?php
 
+// System Check
+if (!defined("_WBCHAT_PLATFORM_")) throw new Exception("Web Platform is not defined!");
+
 // Imports
-importer::importCore("domain::model");
+importer::importCore("database::dbConnection");
+importer::importCore("database::sqlbuilder");
+importer::importCore("database::sqlQuery");
 
 /**
  * 
@@ -9,14 +14,13 @@ importer::importCore("domain::model");
  * @author John
  * @author Marios
  */
-class ThreadTypeModel extends Model {
+class ThreadTypeModel {
     
     /**
      * 
      */
     public function __construct() {
         parent::__construct();
-        $this->table = 'threadtype';
     }
     
     /**
@@ -34,13 +38,14 @@ class ThreadTypeModel extends Model {
         }
         
         $sqc = new SqlBuilder();
-        $sqc->selectTableColumn($this->table, 'id')
-                ->from($this->table)
+        $sqc->selectTableColumn('threadtype', 'id')
+                ->from('threadtype')
                 ->where('`description` = "' . $description . '"')
                 ->createQuery();
 
         $threadType = null;
-        $resultSet = $this->getDbConnection()->execute_query(new sqlQuery($sqc->getQuery()));
+        $dbc = new dbConnection();
+        $resultSet = $dbc->execute_query(new sqlQuery($sqc->getQuery()));
         if ($resultSet) {
             $threadType = $resultSet->fetchAssoc();
         }

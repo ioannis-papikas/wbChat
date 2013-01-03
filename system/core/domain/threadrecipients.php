@@ -1,6 +1,12 @@
 <?php
 
-importer::importCore('domain::model');
+// System Check
+if (!defined("_WBCHAT_PLATFORM_")) throw new Exception("Web Platform is not defined!");
+
+// Imports
+importer::importCore("database::dbConnection");
+importer::importCore("database::sqlbuilder");
+importer::importCore("database::sqlQuery");
 
 /**
  * 
@@ -8,14 +14,13 @@ importer::importCore('domain::model');
  * @author John
  * @author Tasos
  */
-class ThreadRecipientsModel extends Model {
+class ThreadRecipientsModel {
     
     /**
      * 
      */
     public function __construct() {
         parent::__construct();
-        $this->table = 'threadrecipients';
     }
     
     /**
@@ -38,11 +43,17 @@ class ThreadRecipientsModel extends Model {
                     'Invalid thread ID: ' . $threadId);
         }
         
-        $dbc = $this->getDbConnection();
+        $dbc = new dbConnection();
         foreach ($recipientIds as $recipientId) {
             $sqc = new SqlBuilder();
-            $query = $sqc->getInsertStatement($this->table, array(
-                $threadId, $recipientId));
+            $query = $sqc->getInsertStatement('threadrecipients',
+                    array(
+                        'thread_id',
+                        'recipient_id'
+                    ), array(
+                        $threadId, 
+                        $recipientId
+                    ));
 
             $dbc->execute_query(new sqlQuery($query), 0);
         }

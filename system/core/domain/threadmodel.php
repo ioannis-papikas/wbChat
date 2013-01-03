@@ -1,14 +1,12 @@
 <?php
 
-//require_once systemCore . '/database/sqlquerycreator.php';
-//require_once systemCore . '/database/dbConnection.php';
-//require_once systemCore . '/database/sqlQuery.php';
-
 // System Check
 if (!defined("_WBCHAT_PLATFORM_")) throw new Exception("Web Platform is not defined!");
 
 // Imports
-importer::importCore("domain::model");
+importer::importCore("database::dbConnection");
+importer::importCore("database::sqlbuilder");
+importer::importCore("database::sqlQuery");
 importer::importCore('domain::threadtypemodel');
 importer::importCore('domain::threadrecipientsmodel');
 
@@ -18,7 +16,7 @@ importer::importCore('domain::threadrecipientsmodel');
  * @author John
  * @author Marios
  */
-class ThreadModel extends Model {
+class ThreadModel {
     
     private $dateCreated;
     private $subject;
@@ -26,7 +24,6 @@ class ThreadModel extends Model {
 
     public function __construct() {
         parent::__construct();
-        $this->table = 'thread';
         
         $this->threadTypeId = 0;
         $this->subject = '';
@@ -50,11 +47,20 @@ class ThreadModel extends Model {
         }
 
         $sqc = new SqlBuilder();
-        $threadQuery = $sqc->getInsertStatement($this->table, array(
-            'NULL', $threadType['id'], $subject, date('Y-m-d H:i:s', time())
-        ));
-        $dbc = $this->getDbConnection();
-        $dbc->execute_query($threadQuery);
+        $threadQuery = $sqc->getInsertStatement('thread', 
+                array(
+                    'id',
+                    'threadType_id',
+                    'subject',
+                    'dateCreated'
+                ), array(
+                    'NULL',
+                    $threadType['id'], 
+                    $subject, 
+                    date('Y-m-d H:i:s', time())
+                ));
+        $dbc = new dbConnection();
+        $dbc->execute_query(new sqlQuery($threadQuery));
         $dbLink = $dbc->getConnector()->getConnection();
         $threadId = mysqli_insert_id($dbLink);
         

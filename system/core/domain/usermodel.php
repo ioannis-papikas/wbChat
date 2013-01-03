@@ -5,6 +5,8 @@ if (!defined("_WBCHAT_PLATFORM_")) throw new Exception("Web Platform is not defi
 
 // Imports
 importer::importCore("database::dbConnection");
+importer::importCore("database::sqlbuilder");
+importer::importCore("database::sqlQuery");
 
 /**
  * Description of User
@@ -25,7 +27,7 @@ class UserModel {
             ->createQuery();
         $dbc = new dbConnection();
         
-        return $dbc->execute_query($sqc->getQuery());
+        return $dbc->execute_query(new sqlQuery($sqc->getQuery()));
     }
     
 }
