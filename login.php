@@ -65,7 +65,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
 }
 
 ?>
-?>
 <!DOCTYPE>
 <html>
 <?php importer::includeResource("head"); ?>
