@@ -13,38 +13,44 @@ importer::importCore("base::DOM");
 
 class notification
 {
+	private $dom;
 	private $holder;
 	
 	public function __construct($type = "")
 	{
 		// Initialize DOM Document
-		DOM::initialize();
+		$this->dom = new DOM();
 		
 		// Create Notification Holder
-		$this->holder = DOM::create("div", "", "", "notification".($type == "" ? "" : " $type"));
-		DOM::append($this->holder);
+		$this->holder = $this->dom->create("div", "", "", "notification".($type == "" ? "" : " $type"));
+		$this->dom->append($this->holder);
 	}
 	
 	public function set_header($title)
 	{
 		// Create Header
-		$header = DOM::create("h4", $title, "", "header");
-		DOM::append($this->holder, $header);
+		$header = $this->dom->create("h4", $title, "", "header");
+		$this->dom->append($this->holder, $header);
 	}
 	
 	public function set_body($content)
 	{
 		// Create body
-		$body = DOM::create("div", "", "", "body");
-		DOM::append($this->holder, $body);
+		$body = $this->dom->create("div", "", "", "body");
+		$this->dom->append($this->holder, $body);
 		
 		// Insert Content
-		DOM::append($body, $content);
+		$this->dom->append($body, $content);
+	}
+	
+	public function getDOM()
+	{
+		return $this->dom;
 	}
 	
 	public function getHTML()
 	{
-		return DOM::getHTML();
+		return $this->dom->getHTML();
 	}
 }
 

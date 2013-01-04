@@ -7,69 +7,141 @@ importer::importCore("profile::user");
 importer::importCore("base::DOM");
 	
 // Create User Navigation
-DOM::initialize();
-$container = DOM::create("div", "", "", "user");
-DOM::append($container);
+$dom = new DOM();
+$container = $dom->create("div", "", "userArea");
+$dom->append($container);
+
+$userControl = $dom->create("div", "", "userControl");
+$dom->append($container, $userControl);
+
+// User Avatar
+$avatar = $dom->create("div", "", "", "avatar");
+$dom->append($userControl, $avatar);
+
+// User Sign
+$userSign = $dom->create("div", "", "", "user");
+$dom->append($userControl, $userSign);
 
 // Get User
 $profile = user::profile();
-$avatarName = "Guest";
+$avatarName = (!is_null($profile) ? $profile['fullname'] : "Guest");
+$userFullName = $dom->create("span", $avatarName);
+$dom->append($userSign, $userFullName);
+
+// User Navigation
+$userNav = $dom->create("div", "", "", "userNav");
+$dom->append($container, $userNav);
+
+$navMenu = $dom->create("div", "", "", "navMenu noDisplay");
+$dom->append($userNav, $navMenu);
 if (!is_null($profile))
 {
-	// Create Avatar
-	$avatar = DOM::create("a", $profile['fullname']);
-	DOM::attr($avatar, "href", "profile.php");
-	DOM::attr($avatar, "target", "_self");
-	DOM::append($container, $avatar);
+	// Create Navigation item
+	$navItem = $dom->create("li", "", "", "navItem");
+	$dom->append($navMenu, $navItem);
+	$profileNav = $dom->create("a", "Προφίλ");
+	$dom->append($navItem, $profileNav);
+	$dom->attr($profileNav, "href", "profile.php");
+	$dom->attr($profileNav, "target", "_self");
 	
-	// User Controls
-	$controls = DOM::create("div", "", "", "controls");
-	DOM::append($container, $controls);
+	// Create Navigation item
+	$navItem = $dom->create("li", "", "", "navItem");
+	$dom->append($navMenu, $navItem);
 	
 	// Create logout form
-	$logoutForm = DOM::create("form");
-	DOM::append($controls, $logoutForm);
-	DOM::attr($logoutForm, "action", "logout.php");
-	DOM::attr($logoutForm, "method", "post");
+	$logoutForm = $dom->create("form");
+	$dom->append($navItem, $logoutForm);
+	$dom->attr($logoutForm, "action", "logout.php");
+	$dom->attr($logoutForm, "method", "post");
 	//_____ Logout button
-	$btn_logout = DOM::create("button", "Αποσύνδεση");
-	DOM::append($logoutForm, $btn_logout);
-	DOM::attr($btn_logout, "type", "submit");
-	DOM::attr($btn_logout, "class", "label_button");
-}
-else
-{
-	// Create Avatar
-	$avatar = DOM::create("a", "Guest");
-	DOM::append($container, $avatar);
+	$btn_logout = $dom->create("button", "Αποσύνδεση");
+	$dom->append($logoutForm, $btn_logout);
+	$dom->attr($btn_logout, "type", "submit");
+	$dom->attr($btn_logout, "class", "label_button");
 	
-	// Create Login Control
-	$controls = DOM::create("div", "", "", "controls");
-	DOM::append($container, $controls);
-	// Login
-	$login = DOM::create("a", "login");
-	DOM::attr($login, "href", "login.php");
-	DOM::attr($login, "target", "_self");
-	DOM::append($controls, $login);
+	// Create Navigation item
+	$sepItem = $dom->create("li", "", "", "navItem separator");
+	$dom->append($navMenu, $sepItem);
+}
+
+// Include Chat Controls
+if (!is_null($profile))
+{
+	// Create Chat Control's Menu
+	$chatMenu = $dom->create("div", "", "chatControls", "navMenu");
+	$dom->append($container, $chatMenu);
+	
+	// New Thread Item
+	$navItem = $dom->create("li", "", "", "navItem");
+	$dom->append($chatMenu, $navItem);
+	$navItemA = $dom->create("a", "+ Νέα Συζήτηση", "create_newThread");
+	$dom->attr($navItemA, "href", "#");
+	$dom->append($navItem, $navItemA);
+	
+	// Create Separator item
+	$sepItem = $dom->create("li", "", "", "navItem separator");
+	$dom->append($chatMenu, $sepItem);
+	
+	// Create Chat Folders
+	$navItem = $dom->create("li", "", "", "navItem");
+	$dom->append($chatMenu, $navItem);
+	$navItemA = $dom->create("a", "Εισερχόμενα", "view_inbox");
+	$dom->attr($navItemA, "href", "#");
+	$dom->append($navItem, $navItemA);
+	
+	$navItem = $dom->create("li", "", "", "navItem");
+	$dom->append($chatMenu, $navItem);
+	$navItemA = $dom->create("a", "Απεσταλμένα", "view_inbox");
+	$dom->attr($navItemA, "href", "#");
+	$dom->append($navItem, $navItemA);
 }
 
 ?>
 <div class="uiMainHeader">
 	<div class="uiMainToolbar">
-		<div class="userArea">
-			<div class="userControl">
-				<div class="avatar"></div>
-				<?php echo DOM::getHTML(); ?>
-			</div>
-			<div class="pageTitle">
-				<span class="content"><?php echo $GLOBALS['pageTitle']; ?></span>
-			</div>
+		<?php echo $dom->getHTML(); ?>
+		<div class="navigation">
+			<?php
+				// Create navigation menu
+				$dom = new DOM();
+				
+				$menu = $dom->create("ul", "", "", "navMenu");
+				$dom->append($menu);
+				
+				// If user is logged in, logout link
+				if (is_null($profile))
+				{
+					// Create Navigation item
+					$loginItem = $dom->create("li", "", "", "navItem");
+					$dom->append($menu, $loginItem);
+					
+					// Login
+					$login = $dom->create("a", "Σύνδεση Χρήστη");
+					$dom->attr($login, "href", "login.php");
+					$dom->attr($login, "target", "_self");
+					$dom->append($loginItem, $login);
+					
+					// Create Navigation item
+					$registerItem = $dom->create("li", "", "", "navItem");
+					$dom->append($menu, $registerItem);
+					
+					// Register
+					$register = $dom->create("a", "Εγγραφή Χρήστη");
+					$dom->attr($register, "href", "register.php");
+					$dom->attr($register, "target", "_self");
+					$dom->append($registerItem, $register);
+				}
+				
+				echo $dom->getHTML();
+			?>
 		</div>
 		<div class="signature">
 			<div class="content">
-				<div class="title">Web Chat &copy; 2012</div>
+				<div class="title">Web Chat &copy; 2013</div>
 				<br />
 				<div class="menu">
+					<a href="<?php echo siteRoot; ?>/index.php" target="_self" tabindex="-1">Αρχική</a>
+					<span>&bull;</span>
 					<a href="<?php echo siteRoot; ?>/about.php" target="_self" tabindex="-1">Πληροφορίες</a>
 					<span>&bull;</span>
 					<a href="<?php echo siteRoot; ?>/copyright.php" target="_self" tabindex="-1">Copyright</a>

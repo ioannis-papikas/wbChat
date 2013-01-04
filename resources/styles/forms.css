@@ -1,7 +1,10 @@
 /*____________________ chatroom.css ____________________*/
+form {
+	margin:0px;
+	padding:0px;
+}
 .uiForm {
 	width:650px;
-	margin:0 auto;
 }
 .uiForm.big {
 	font-size:14px;
@@ -45,6 +48,8 @@
 }
 button.label_button {
 	cursor:pointer;
+	padding:0px;
+	margin:0px;
 }
 button.label_button:hover {
 	color:blue;
