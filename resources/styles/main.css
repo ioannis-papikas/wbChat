@@ -12,82 +12,105 @@ a, a.visited {
 	text-decoration:none;
 	outline:none;
 }
+.noDisplay {
+	display:none;
+}
 
 /*__________ Header __________*/
 .uiMainHeader {
-	position:relative;
-	padding-top:120px;
+	position:fixed;
+	top:0px;
+	bottom:0px;
+	height:100%;
+	width:250px;
+	z-index:50;
+	background-color:#EEE;
+	border-right:1px solid rgba(166, 166, 166, 0.3);
 }
 .uiMainToolbar {
-	min-width:1000px;
+	height:100%;
+	overflow:auto;
 }
-.uiMainToolbar .userArea {
-	position:absolute;
-	top:20px;
-	left:20px;
-	
+.uiMainToolbar #userArea {
 	z-index:5;
+	overflow:auto;
 	box-sizing:border-box;
 	-webkit-box-sizing:border-box;
 	-moz-box-sizing:border-box;
 }
-.userArea > .userControl {
-	float:left;
+.uiMainToolbar .navigation {
+	padding:0px;
+	margin:0px;
+}
+.navMenu {
+	padding:0px;
+	margin:0px;
+	list-style:none;
+}
+.navMenu > .navItem {
+	line-height:25px;
+	padding-left:25px;
+	height:25px;
+	vertical-align:middle;
+}
+.navItem form, .navItem form .label_button {
+	height:25px;
+}
+.navItem a {
+	width:100%;
+	display:block;
+	box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+}
+.navItem:hover {
+	background-color:rgba(166, 166, 166, 0.2);
+}
+.navItem.separator {
+	height:1px;
+	background-color:#FFF;
+	width:70%;
+	margin:3px auto;
+}
+#userArea > #userControl {
 	overflow:auto;
-	height:80px;
+	height:70px;
 	min-width:200px;
-	
+	cursor:pointer;
 	color:#3871E0;
 	font-size:12px;
 	font-weight:bold;
-	background-color:rgba(14, 60, 167, 0.05);
-	border:1px solid rgba(56, 113, 224, 0.3);
+	background-color:#FFF;
+	border:1px solid rgba(56, 113, 224, 0.6);
+	box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	margin:25px;
+	box-shadow:0px 0px 5px rgba(0, 0, 0, 0.2);//rgba(56, 113, 224, 0.2);
 }
-.userArea >  .userControl:hover {
-	border:1px solid rgba(56, 113, 224, 0.8);
-	box-shadow:0px 0px 8px rgba(56, 113, 224, 0.2);
-}
-.userArea > .userControl .avatar {
-	margin:15px;
+#userArea > #userControl .avatar {
+	margin:9px;
 	width:50px;
 	height:50px;
 	float:left;
-	background-color:rgba(255, 255, 255, 0.3);
+	background-color:rgba(166, 166, 166, 0.1);
 }
-.userArea > .userControl .user {
+#userArea > #userControl .user {
 	float:left;
 	padding:0px;
 	margin:0px;
-	padding-top:20px;
+	padding-top:10px;
+	line-height:50px;
 }
-.userArea > .userControl .controls {
-	clear:right;
-	padding-top:5px;
-}
-.userArea > .userControl .controls button {
+.navMenu button {
 	background:none;
 	border:none;
 }
-.userArea > .pageTitle {
-	float:left;
-	overflow:auto;
-	height:80px;
-	min-width:200px;
-	
-	color:#3871E0;
-	font-size:12px;
-	font-weight:bold;
-	line-height:80px;
-	margin-left:50px;
-	font-size:18px;
-}
 .uiMainToolbar .signature {
-	position:absolute;
-	top:20px;
-	right:20px;
-	z-index:5;
-	
-	text-align:right;
+	width:100%;
+	float:left;
+	margin-top:50px;
+	padding:5px;
 	box-sizing:border-box;
 	-webkit-box-sizing:border-box;
 	-moz-box-sizing:border-box;
@@ -98,13 +121,20 @@ a, a.visited {
 }
 /*__________ MainContent __________*/
 .uiMainContent {
-	position:absolute;
-	width:100%;
 	height:100%;
-	margin-top:-120px;
-	padding-top:120px;
+	padding-top:25px;
+	padding-left:265px;
 	overflow:auto;
 	box-sizing:border-box;
 	-webkit-box-sizing:border-box;
 	-moz-box-sizing:border-box;
+}
+.uiMainContent .uiHeader {
+	height:70px;
+	
+	color:#3871E0;
+	font-weight:bold;
+	line-height:70px;
+	padding-left:8px;
+	font-size:18px;
 }

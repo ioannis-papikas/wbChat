@@ -61,14 +61,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
 		$ntf->set_header("Σφάλματα κατά την εγγραφή");
 		
 		// Create Error List
-		$errList = DOM::create("ul");
+		$errList = $dom->create("ul");
 		$ntf->set_body($errList);
 		
 		// Create error elemeents
 		foreach($errors as $err)
 		{
-			$errItem = DOM::create("li", $err);
-			DOM::append($errList, $errItem);
+			$errItem = $dom->create("li", $err);
+			$dom->append($errList, $errItem);
 		}
 	}
 	else
@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
 			$ntf->set_header("Επιτυχία");
 			
 			// Create Error List
-			$msg = DOM::create("p", "Η εγγραφή σας στο σύστημα ήταν επιτυχής.");
+			$msg = $dom->create("p", "Η εγγραφή σας στο σύστημα ήταν επιτυχής.");
 			$ntf->set_body($msg);
 			
 			unset($_POST);
@@ -96,12 +96,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
 }
 
 ?>
+?>
 <!DOCTYPE>
 <html>
 <?php importer::includeResource("head"); ?>
 <body>
 	<?php importer::includeResource("header"); ?>
 	<div class="uiMainContent">
+		<div class="uiHeader">Εγγραφή Χρήστη</div>
 		<form id="register" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" class="uiForm big" role="register" locale="el_GR">
 			<div class="form_report">
 				<?php

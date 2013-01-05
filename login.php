@@ -29,15 +29,17 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
 		$ntf = new notification("error");
 		$ntf->set_header("Σφάλματα κατά την σύνδεση");
 		
+		$dom = $ntf->getDOM();
+		
 		// Create Error List
-		$errList = DOM::create("ul");
+		$errList = $dom->create("ul");
 		$ntf->set_body($errList);
 		
 		// Create error elemeents
 		foreach($errors as $err)
 		{
-			$errItem = DOM::create("li", $err);
-			DOM::append($errList, $errItem);
+			$errItem = $dom->create("li", $err);
+			$dom->append($errList, $errItem);
 		}
 	}
 	else
@@ -50,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
 			$ntf->set_header("Σφάλμα κατά την σύνδεση");
 			
 			// Create Error List
-			$msg = DOM::create("p", "Το όνομα χρήστη ή/και ο κωδικός πρόσβασης είναι λανθασμένα. Παρακαλώ δοκιμάστε ξανά.");
+			$msg = $dom->create("p", "Το όνομα χρήστη ή/και ο κωδικός πρόσβασης είναι λανθασμένα. Παρακαλώ δοκιμάστε ξανά.");
 			$ntf->set_body($msg);
 		}
 		else
@@ -69,6 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
 <body>
 	<?php importer::includeResource("header"); ?>
 	<div class="uiMainContent">
+		<div class="uiHeader">Σύνδεση Χρήστη</div>
 		<form id="register" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" class="uiForm big" role="register" locale="el_GR">
 			<div class="form_report">
 				<?php
@@ -76,7 +79,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
 						echo $ntf->getHTML();
 				?>
 			</div>
-			<div class="uiFormHeader">Συνδεση</div>
 			<div class="form_row">
 				<input id="inp_username" name="username" type="text" class="uiFormInput required" placeholder="* Όνομα Χρήστη" value="<?php echo $_POST['username'];?>" autofocus />
 			</div>

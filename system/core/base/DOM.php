@@ -10,18 +10,17 @@ if (!defined("_WBCHAT_PLATFORM_")) throw new Exception("Web Platform is not defi
 
 class DOM
 {
-	protected static $document;
+	protected $document;
 	
-	// Initialize document
-	public static function initialize()
+	public function __construct()
 	{
-		self::$document = new DOMDocument("1.0", "UTF-8");
+		$this->document = new DOMDocument("1.0", "UTF-8");
 	}
 	
 	// Creates and returns a domElement with the specified tagName and the specified attributes
-	public static function create($tag = "div", $content = "", $id = "", $class = "")
+	public function create($tag = "div", $content = "", $id = "", $class = "")
 	{
-		$elem = self::$document->createElement($tag, $content);
+		$elem = $this->document->createElement($tag, $content);
 		
 		// Insert id if not null
 		if (!is_null($id) && !empty($id))
@@ -35,14 +34,14 @@ class DOM
 	}
 	
 	// Evaluate an XPath Query
-	public static function evaluate($query, $context = NULL)
+	public function evaluate($query, $context = NULL)
 	{
-		$xpath = new DOMXPath(self::$document);
+		$xpath = new DOMXPath($this->document);
 		return $xpath->evaluate($query, $context);
 	}
 	
 	// Find an element by id
-	public static function find($id, $context = NULL)
+	public function find($id, $context = NULL)
 	{
 		$q = "//*[@id='$id']";
 		$list = self::evaluate($q, $context);
@@ -54,39 +53,39 @@ class DOM
 	}
 	
 	// Creates a specific comment tag
-	public static function comment($content)
+	public function comment($content)
 	{
-		return self::$document->createComment($content);
+		return $this->document->createComment($content);
 	}
 	
 	// Imports a node to this document
-	public static function import($node, $deep = TRUE)
+	public function import($node, $deep = TRUE)
 	{
 		if (is_null($node))
 			return NULL;
-		return self::$document->importNode($node, $deep);
+		return $this->document->importNode($node, $deep);
 	}
 	
 	// Returns the HTML form of the document
-	public static function getHTML()
+	public function getHTML()
 	{
-		return self::$document->saveHTML();
+		return $this->document->saveHTML();
 	}
 	
 	// Returns the XML form of the document
-	public static function getXML()
+	public function getXML()
 	{
-		return self::$document->saveXML();
+		return $this->document->saveXML();
 	}
 	
 	// Get the document
-	public static function document()
+	public function document()
 	{
-		return self::$document;
+		return $this->document;
 	}
 	
 	// Adds an attribute into a domElement
-	public static function attr($elem, $name, $val = NULL)
+	public function attr($elem, $name, $val = NULL)
 	{
 		// If value empty, return attribute value
 		if (is_null($val))
@@ -112,7 +111,7 @@ class DOM
 	}
 	
 	// Adds a series of attributes (in the form of an array) into a domElement
-	public static function attrs($elem, $val = array())
+	public function attrs($elem, $val = array())
 	{
 		if (is_array($val) && count($val) > 0)
 			foreach ($val as $key=>$value)
@@ -120,7 +119,7 @@ class DOM
 	}
 	
 	// Appends the value of an attribute of a domElement
-	public static function appendAttr($elem, $name, $val)
+	public function appendAttr($elem, $name, $val)
 	{
 		$val = trim($val);
 		if (empty($val))
@@ -135,7 +134,7 @@ class DOM
 	}
 	
 	// Inserts data-[$name] attributes as an array into the domElement
-	public static function data($elem, $name, $val = array())
+	public function data($elem, $name, $val = array())
 	{
 		if (is_array($val) && count($val) > 0)
 		{
@@ -155,28 +154,25 @@ class DOM
 	}
 	
 	// Appends a DOMElement to a parent DOMElement
-	public static function append($parent, $child = NULL)
+	public function append($parent, $child = NULL)
 	{
 		if (is_null($child))
-		{
-			$document = $parent->ownerDocument;
-			return $document->appendChild($parent);
-		}
+			return $this->document->appendChild($parent);
 		
 		if (is_null($parent))
 			return;
-			
+		
 		$parent->appendChild($child);
 	}
 	
 	// Prepends a DOMElement to a parent DOMElement
-	public static function prepend($parent, $child)
+	public function prepend($parent, $child)
 	{
 		$parent->insertBefore($child, $parent->childNodes->item(0));
 	}
 	
 	// Appends a DOMElement to a parent DOMElement, before the given child
-	public static function appendBefore($parent, $before, $child)
+	public function appendBefore($parent, $before, $child)
 	{
 		if (is_null($child))
 			return FALSE;
@@ -184,7 +180,7 @@ class DOM
 	}
 	
 	// Replaces the old domElement with the new domElement
-	public static function replace($old, $new)
+	public function replace($old, $new)
 	{
 		if (is_null($old))
 			return FALSE;
@@ -198,7 +194,7 @@ class DOM
 	}
 	
 	// Returns the nodeValue of the given domElement
-	public static function nodeValue($element, $value = NULL)
+	public function nodeValue($element, $value = NULL)
 	{
 		if (is_null($value))
 			return $element->nodeValue;
@@ -208,7 +204,7 @@ class DOM
 	}
 	
 	// Get or Set inner HTML
-	public static function innerHTML($element, $value = NULL)
+	public function innerHTML($element, $value = NULL)
 	{
 		// If value is null, return inner HTML
 		if (is_null($value))
