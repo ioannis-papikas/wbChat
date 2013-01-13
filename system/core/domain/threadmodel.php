@@ -22,9 +22,7 @@ class ThreadModel {
     private $subject;
     private $threadTypeId;
 
-    public function __construct() {
-        parent::__construct();
-        
+    public function __construct() {        
         $this->threadTypeId = 0;
         $this->subject = '';
         $this->dateCreated = null;

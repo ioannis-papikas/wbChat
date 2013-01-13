@@ -20,7 +20,6 @@ class ThreadTypeModel {
      * 
      */
     public function __construct() {
-        parent::__construct();
     }
     
     /**

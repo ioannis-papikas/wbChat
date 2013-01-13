@@ -20,7 +20,6 @@ class ThreadRecipientsModel {
      * 
      */
     public function __construct() {
-        parent::__construct();
     }
     
     /**
