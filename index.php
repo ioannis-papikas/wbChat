@@ -10,11 +10,7 @@ require_once("_config.php");
 <body>
 	<?php importer::includeResource("header"); ?>
 	<div class="uiMainContent">
-		<div id="messageCenter">
-			<div id="folders"></div>
-			<div id="threads"></div>
-			<div id="threadContent"></div>
-		</div>
+		<div id="messageCenter"></div>
 	</div>
 </body>
 </html>
