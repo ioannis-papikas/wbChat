@@ -51,6 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
 			$ntf = new notification("error");
 			$ntf->set_header("Σφάλμα κατά την σύνδεση");
 			
+			$dom = $ntf->getDOM();
+			
 			// Create Error List
 			$msg = $dom->create("p", "Το όνομα χρήστη ή/και ο κωδικός πρόσβασης είναι λανθασμένα. Παρακαλώ δοκιμάστε ξανά.");
 			$ntf->set_body($msg);

@@ -150,9 +150,10 @@ class mysql_dbConnector
 		return $escaped;
 	}
         
-        public function getConnection() {
-            return $this->connection;
-        }
+	final public function getConnection()
+	{
+		return $this->connection;
+	}
         
 	// Returns the number of rows of the resource
 	final public function get_num_rows($resource)

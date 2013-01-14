@@ -10,14 +10,7 @@ class sqlQuery {
 
     private $query;
     
-    public function __construct($query) {
-        if (empty($query)) {
-            throw new InvalidArgumentException(
-                    'Cannot store empty query.');
-        }
-        
-        $this->query = $query;
-    }
+    public function __construct() {}
     
     public function set_query($query) {
         $this->query = $query;
