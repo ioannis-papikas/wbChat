@@ -26,8 +26,8 @@ class SqlBuilder {
             'group_by' => array(),
             'having' => array(),
             'inner_join' => array(),
-            'left_outer_join' => array(),
-            'right_outer_join' => array(),
+            'left_join' => array(),
+            'right_join' => array(),
             'sort_by' => array(),
             'select' => array(),
             'where' => array()
@@ -47,13 +47,13 @@ class SqlBuilder {
             throw new InvalidArgumentException(
                     'Cannot add empty AND clause.');
         }
-        
+
         if (empty($this->clauses['where'])) {
             $this->clauses['where'] = array($condition);
         } else {
             $this->clauses['where'][] = 'AND ' . $condition;
         }
-        
+
         return $this;
     }
 
@@ -65,35 +65,13 @@ class SqlBuilder {
     public function createQuery() {
         $queryArr = array();
 
-        if (!empty($this->clauses['select'])) {
-            $queryArr[] = 'SELECT ' . implode(', ', $this->clauses['select']);
-        }
-        if (!empty($this->clauses['from'])) {
-            $queryArr[] = 'FROM ' . implode(', ', $this->clauses['from']);
-            
-            if (!empty($this->clauses['inner_join'])) {
-                $queryArr[] = implode(' ', $this->clauses['inner_join']);
-            }
-            if (!empty($this->clauses['left_join'])) {
-                $queryArr[] = implode(' ', $this->clauses['left_join']);
-            }
-            if (!empty($this->clauses['right_join'])) {
-                $queryArr[] = implode(' ', $this->clauses['right_join']);
-            }
-        }
-        if (!empty($this->clauses['where'])) {
-            $queryArr[] = 'WHERE ' . implode(' ', $this->clauses['where']);
-        }
-        if (!empty($this->clauses['group_by'])) {
-            $queryArr[] = 'GROUP BY ' . implode(', ', $this->clauses['group_by']);
-        }
-        if (!empty($this->clauses['sort_by'])) {
-            $queryArr[] = 'SORT BY ' . implode(', ', $this->clauses['sort_by']);
-        }
-        if (!empty($this->clauses['having'])) {
-            $queryArr[] = 'HAVING ' . implode(' ', $this->clauses['having']);
-        }
-        
+        $this->addSelect($queryArr);
+        $this->addFrom($queryArr);
+        $this->addWhere($queryArr);
+        $this->addGroupBy($queryArr);
+        $this->addSortBy($queryArr);
+        $this->addHaving($queryArr);
+
         $this->query = implode(' ', $queryArr) . ';';
     }
 
@@ -116,7 +94,7 @@ class SqlBuilder {
 
         return $this;
     }
-    
+
     /**
      * 
      * @param string $tableName
@@ -128,8 +106,8 @@ class SqlBuilder {
         $columns = implode(', ', $columns);
         $values = implode(', ', $values);
         $query = 'INSERT INTO `' . $tableName . '` (' . $columns . ')'
-            . 'VALUES (' . $values . ');';
-        
+                . 'VALUES (' . $values . ');';
+
         return $query;
     }
 
@@ -198,10 +176,9 @@ class SqlBuilder {
             throw new InvalidArgumentException(
                     'Cannot add an empty condition to the HAVING clause.');
         }
-        
-        $this->clauses['having'][] = empty($this->clauses['having']) ? $condition
-                : $operator . ' ' . $condition;
-        
+
+        $this->clauses['having'][] = empty($this->clauses['having']) ? $condition : $operator . ' ' . $condition;
+
         return $this;
     }
 
@@ -219,7 +196,7 @@ class SqlBuilder {
      * already occurred
      */
     public function innerJoin($tableName, $alias, $condition) {
-        if (empty($tableName) ) {
+        if (empty($tableName)) {
             throw new InvalidArgumentException(
                     'Cannot join unnamed table.');
         }
@@ -231,12 +208,12 @@ class SqlBuilder {
             throw new RuntimeException(
                     'Cannot perform join when no other table has been specified, so far.');
         }
-        
+
         $clause = 'INNER JOIN `' . $tableName . '`';
-        $clause .= !empty($alias) ? ' AS ' . $alias : '';
+        $clause .=!empty($alias) ? ' AS ' . $alias : '';
         $clause .= ' ON ' . $condition;
         $this->clauses['inner_join'][] = $clause;
-        
+
         return $this;
     }
 
@@ -250,7 +227,7 @@ class SqlBuilder {
      * @return SqlBuilder This SqlQueryCreator for method call chaining.
      */
     public function leftJoin($tableName, $alias, $condition) {
-        if (empty($tableName) ) {
+        if (empty($tableName)) {
             throw new InvalidArgumentException(
                     'Cannot join unnamed table.');
         }
@@ -262,12 +239,12 @@ class SqlBuilder {
             throw new RuntimeException(
                     'Cannot perform join when no other table has been specified, so far.');
         }
-        
+
         $clause = 'LEFT JOIN `' . $tableName . '`';
-        $clause .= !empty($alias) ? ' AS ' . $alias : '';
+        $clause .=!empty($alias) ? ' AS ' . $alias : '';
         $clause .= ' ON ' . $condition;
         $this->clauses['left_join'][] = $clause;
-        
+
         return $this;
     }
 
@@ -284,13 +261,13 @@ class SqlBuilder {
             throw new InvalidArgumentException(
                     'Cannot add empty OR clause.');
         }
-        
+
         if (empty($this->clauses['where'])) {
             $this->clauses['where'] = array($condition);
         } else {
             $this->clauses['where'][] = 'OR ' . $condition;
         }
-        
+
         return $this;
     }
 
@@ -304,7 +281,7 @@ class SqlBuilder {
      * @return SqlBuilder This SqlQueryCreator for method call chaining.
      */
     public function rightJoin($tableName, $alias, $condition) {
-        if (empty($tableName) ) {
+        if (empty($tableName)) {
             throw new InvalidArgumentException(
                     'Cannot join unnamed table.');
         }
@@ -316,12 +293,12 @@ class SqlBuilder {
             throw new RuntimeException(
                     'Cannot perform join when no other table has been specified, so far.');
         }
-        
+
         $clause = 'RIGHT JOIN `' . $tableName . '`';
-        $clause .= !empty($alias) ? ' AS ' . $alias : '';
+        $clause .=!empty($alias) ? ' AS ' . $alias : '';
         $clause .= ' ON ' . $condition;
-        $this->clauses['left_join'][] = $clause;
-        
+        $this->clauses['right_join'][] = $clause;
+
         return $this;
     }
 
@@ -436,7 +413,7 @@ class SqlBuilder {
 
         return $this;
     }
-    
+
     /**
      * Adds a column of a specific table to the SORT BY clause.
      * 
@@ -477,6 +454,90 @@ class SqlBuilder {
         $this->clauses['where'] = array($condition);
 
         return $this;
+    }
+
+    /**
+     * Adds the FROM statement to the query array.
+     * 
+     * @param array $queryArr The array of the query created, so far.
+     * @return void
+     */
+    private function addFrom(&$queryArr) {
+        if (!empty($this->clauses['from'])) {
+            $queryArr[] .= 'FROM ' . implode(', ', $this->clauses['from']);
+
+            if (!empty($this->clauses['inner_join'])) {
+                $queryArr[] = implode(' ', $this->clauses['inner_join']);
+            }
+            if (!empty($this->clauses['left_join'])) {
+                $queryArr[] = implode(' ', $this->clauses['left_join']);
+            }
+            if (!empty($this->clauses['right_join'])) {
+                $queryArr[] = implode(' ', $this->clauses['right_join']);
+            }
+        }
+    }
+
+    /**
+     * Adds the GROUP BY statement to the query array.
+     * 
+     * @param array $queryArr The array of the query created, so far.
+     * @return void
+     */
+    private function addGroupBy(&$queryArr) {
+        if (!empty($this->clauses['group_by'])) {
+            $queryArr[] = 'GROUP BY ' . implode(', ', $this->clauses['group_by']);
+        }
+    }
+    
+    /**
+     * Adds the HAVING statement to the query array.
+     * 
+     * @param array $queryArr The array of the query created, so far.
+     * @return void
+     */
+    private function addHaving(&$queryArr) {
+        if (!empty($this->clauses['having'])) {
+            $queryArr[] = 'HAVING ' . implode(' ', $this->clauses['having']);
+        }
+    }
+
+    /**
+     * Adds the SELECT statement to the query array.
+     * 
+     * @param array $queryArr The array of the query created, so far.
+     * @return void
+     */
+    private function addSelect(&$queryArr) {
+        if (!empty($this->clauses['select'])) {
+            $queryArr[] = 'SELECT ' . implode(', ', $this->clauses['select']);
+        }
+    }
+    
+    /**
+     * Adds the SORT BY statement to the query array.
+     * 
+     * @param array $queryArr The array of the query created, so far.
+     * @return void
+     */
+    private function addSortBy(&$queryArr) {
+        if (!empty($this->clauses['sort_by'])) {
+            $queryArr[] = 'SORT BY ' . implode(', ', $this->clauses['sort_by']);
+        }
+        
+        return '';
+    }
+
+    /**
+     * Adds the WHERE statement to the query array.
+     * 
+     * @param array $queryArr The array of the query created, so far.
+     * @return void
+     */
+    private function addWhere(&$queryArr) {
+        if (!empty($this->clauses['where'])) {
+            $queryArr[] = 'WHERE ' . implode(' ', $this->clauses['where']);
+        }
     }
 
 }
