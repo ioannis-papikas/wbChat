@@ -118,6 +118,17 @@ class user
 	{
 		session::clear_set('user');
 	}
+	
+	
+	//
+	public static function getUsers()
+	{
+        $sqc = new SqlBuilder();
+        $sqc->selectTableColumns('user', array('id', 'username'), array('', ''))->from('user')->createQuery();
+		
+        $dbc = new dbConnection();
+        return $dbc->execute_query(new sqlQuery($sqc->getQuery()));
+    }
 }
 
 ?>

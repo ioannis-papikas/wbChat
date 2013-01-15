@@ -85,13 +85,19 @@ if (!is_null($profile))
 	// Create Chat Folders
 	$navItem = $dom->create("li", "", "", "navItem");
 	$dom->append($chatMenu, $navItem);
-	$navItemA = $dom->create("a", "Εισερχόμενα", "view_inbox");
+	$navItemA = $dom->create("a", "Όλα τα μηνύματα", "view_all", "navLink");
 	$dom->attr($navItemA, "href", "#");
 	$dom->append($navItem, $navItemA);
 	
 	$navItem = $dom->create("li", "", "", "navItem");
 	$dom->append($chatMenu, $navItem);
-	$navItemA = $dom->create("a", "Απεσταλμένα", "view_inbox");
+	$navItemA = $dom->create("a", "Εισερχόμενα", "view_inbox", "navLink");
+	$dom->attr($navItemA, "href", "#");
+	$dom->append($navItem, $navItemA);
+	
+	$navItem = $dom->create("li", "", "", "navItem");
+	$dom->append($chatMenu, $navItem);
+	$navItemA = $dom->create("a", "Απεσταλμένα", "view_outbox", "navLink");
 	$dom->attr($navItemA, "href", "#");
 	$dom->append($navItem, $navItemA);
 }

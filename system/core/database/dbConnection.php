@@ -66,14 +66,15 @@ class dbConnection {
         return $this->dbConnector->fetch($resource);
     }
 
-    public function seek($resource, $row) {
+    public function seek($resource, $row)
+	{
         return $this->dbConnector->seek($resource, $row);
     }
-
-    public function getConnector()
+	
+	public function getConnection()
 	{
-        return $this->dbConnector;
-    }
+		return $this->dbConnector->getConnection();
+	}
     
     // Returns the count of rows of the given resource
     public function get_num_rows($resource)
