@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<pmd version="1.4.1" timestamp="2013-01-15T11:43:28+00:00">
+  <file name="C:\Users\Marios\Documents\GitHub\wbChat\system\core\base\DOM.php">
+    <violation beginline="11" endline="260" rule="ExcessiveClassComplexity" ruleset="Code Size Rules" package="+global" externalInfoUrl="http://phpmd.org/rules/codesize.html#excessiveclasscomplexity" class="DOM" priority="3">
+      The class DOM has an overall complexity of 51 which is very high. The configured complexity threshold is 50.
+    </violation>
+    <violation beginline="11" endline="260" rule="TooManyMethods" ruleset="Code Size Rules" package="+global" externalInfoUrl="http://phpmd.org/rules/codesize.html#toomanymethods" class="DOM" priority="3">
+      The class DOM has 17 methods. Consider refactoring DOM to keep number of methods under 10.
+    </violation>
+  </file>
+  <file name="C:\Users\Marios\Documents\GitHub\wbChat\system\core\database\sqlbuilder.php">
+    <violation beginline="8" endline="482" rule="ExcessiveClassComplexity" ruleset="Code Size Rules" package="+global" externalInfoUrl="http://phpmd.org/rules/codesize.html#excessiveclasscomplexity" class="SqlBuilder" priority="3">
+      The class SqlBuilder has an overall complexity of 63 which is very high. The configured complexity threshold is 50.
+    </violation>
+    <violation beginline="8" endline="482" rule="TooManyMethods" ruleset="Code Size Rules" package="+global" externalInfoUrl="http://phpmd.org/rules/codesize.html#toomanymethods" class="SqlBuilder" priority="3">
+      The class SqlBuilder has 18 methods. Consider refactoring SqlBuilder to keep number of methods under 10.
+    </violation>
+    <violation beginline="65" endline="98" rule="CyclomaticComplexity" ruleset="Code Size Rules" package="+global" externalInfoUrl="http://phpmd.org/rules/codesize.html#cyclomaticcomplexity" class="SqlBuilder" method="createQuery" priority="2">
+      The method createQuery() has a Cyclomatic Complexity of 10. The configured cyclomatic complexity threshold is 10.
+    </violation>
+    <violation beginline="65" endline="98" rule="NPathComplexity" ruleset="Code Size Rules" package="+global" externalInfoUrl="http://phpmd.org/rules/codesize.html#npathcomplexity" class="SqlBuilder" method="createQuery" priority="2">
+      The method createQuery() has an NPath complexity of 288. The configured NPath complexity threshold is 200.
+    </violation>
+  </file>
+  <file name="C:\Users\Marios\Documents\GitHub\wbChat\system\core\profile\user.php">
+    <violation beginline="62" endline="62" rule="UnusedLocalVariable" ruleset="Unused Code Rules" externalInfoUrl="http://phpmd.org/rules/unusedcode.html#unusedlocalvariable" priority="3">
+      Avoid unused local variables such as '$salted_password'.
+    </violation>
+  </file>
+  <file name="C:\Users\Marios\Documents\GitHub\wbChat\system\core\state\cookies.php">
+    <violation beginline="42" endline="42" rule="UnusedLocalVariable" ruleset="Unused Code Rules" externalInfoUrl="http://phpmd.org/rules/unusedcode.html#unusedlocalvariable" priority="3">
+      Avoid unused local variables such as '$value'.
+    </violation>
+  </file>
+</pmd>
