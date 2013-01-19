@@ -37,6 +37,9 @@ jq(document).one("ready", function() {
 	// Chat Navigation Controller
 	jq(".navLink").on("click", function(ev) {
 		
+		// Stop Bubling
+		ev.preventDefault();
+		
 		// Call Parameters
 		var url_var = "view="+jq(this).attr("id");
 		
