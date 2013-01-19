@@ -103,6 +103,7 @@ if (!is_null($profile))
 }
 
 ?>
+
 <div class="uiMainHeader">
 	<div class="uiMainToolbar">
 		<?php echo $dom->getHTML(); ?>
@@ -141,6 +142,32 @@ if (!is_null($profile))
 				echo $dom->getHTML();
 			?>
 		</div>
+            
+                <div id="usersList">
+                    <?php
+                        $usersListDom = new DOM();
+                        $usersList = $usersListDom->create("ul");
+                        $usersListDom->append($usersList);
+                        
+                        $exceptIds = isset($profile['id']) 
+                            ? array($profile['id']) 
+                            : array();
+                        $users = user::getUsers($exceptIds);
+                        foreach ($users as $user) {
+                            $usersListItem = $usersListDom->create("li");
+                            $usersListDom->append($usersList, $usersListItem);
+                            
+                            $userLink = $usersListDom->create('a',
+                                $user['username'],
+                                $user['id']);
+                            $usersListDom->attr($userLink, 'href', $user['id']);
+                            $usersListDom->append($usersListItem, $userLink);
+                        }
+                        
+                        echo $usersListDom->getHTML();
+                    ?>
+                </div>
+            
 		<div class="signature">
 			<div class="content">
 				<div class="title">Web Chat &copy; 2013</div>

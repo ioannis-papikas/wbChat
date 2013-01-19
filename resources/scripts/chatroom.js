@@ -26,7 +26,6 @@ jq(document).one("ready", function() {
 				// Debugging
 				console.log(data);
 				jq(data).appendTo(jq("#messageCenter").empty());
-				
 			},
 			complete: function(ev) {
 			},
