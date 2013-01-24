@@ -8,7 +8,7 @@ importer::importCore("database::dbConnection");
 importer::importCore("database::sqlbuilder");
 importer::importCore("database::sqlQuery");
 importer::importCore('domain::threadtypemodel');
-importer::importCore('domain::threadrecipientsmodel');
+importer::importCore('domain::threadrecipients');
 
 /**
  * Description of thread
@@ -60,7 +60,7 @@ class ThreadModel {
     public function saveNew($threadDesc, $subject, $userIds) {
         /* Gather Thread's info. */
         $threadTypeModel = new ThreadTypeModel();
-        $threadType = $threadTypeModel->findByDescription($threadDesc);
+        $threadType = $threadTypeModel->findByDescription($threadDesc);        
         if ($threadType === null) {
             throw new UnexpectedValueException(
                     'Unknown thread description: ' . $threadDesc);
@@ -88,12 +88,16 @@ class ThreadModel {
                     $dateCreated
                 ));
         $dbc = new dbConnection();
-        $dbc->execute_query(new sqlQuery($threadQuery));
+        $sqlQuery = new sqlQuery();
+        $sqlQuery->set_query($threadQuery);
+        $dbc->execute_query();
         $dbLink = $dbc->getConnector()->getConnection();
         $threadId = mysqli_insert_id($dbLink);
         
         $threadRecipientsModel = new ThreadRecipientsModel();
         $threadRecipientsModel->saveAll($userIds, $threadId);
+        
+        return $threadId;
     }
     
     /**

@@ -12,7 +12,7 @@ importer::importCore("database::sqlQuery");
  * 
  *
  * @author John
- * @author Tasos
+ * @author Marios
  */
 class ThreadRecipientsModel {
     

@@ -36,20 +36,22 @@ class ThreadTypeModel {
                     'Cannot search for ThreadType with empty description.');
         }
         
+        $dbc = new dbConnection();
+        $description = $dbc->clear_resource($description);
         $sqc = new SqlBuilder();
         $sqc->selectTableColumn('threadtype', 'id')
                 ->from('threadtype')
                 ->where('`description` = "' . $description . '"')
                 ->createQuery();
 
-        $threadType = null;
-        $dbc = new dbConnection();
-        $resultSet = $dbc->execute_query(new sqlQuery($sqc->getQuery()));
+        $sqlQuery = new sqlQuery();
+        $sqlQuery->set_query($sqc->getQuery());
+        $resultSet = $dbc->execute_query($sqlQuery);
         if ($resultSet) {
-            $threadType = $resultSet->fetchAssoc();
+            return $dbc->fetch($resultSet);
         }
 
-        return $threadType;
+        return null;
     }
 }
 
