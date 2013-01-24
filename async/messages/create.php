@@ -1,12 +1,13 @@
 <?php
-
 // Require System Configuration
 require_once("../../_config.php");
 
-// Get Message Viewer Controller
+// Header Code
+importer::importCore('domain::threadmodel');
+importer::importCore('view::threadview');
 
+$threadView = new ThreadView();
+echo $threadView->display();
 
 ?>
-<div class="text"><?php 
-echo print_r($_GET, true);?></div>
-
+<script src="<?php echo siteRoot . systemResources; ?>/scripts/chatroom-create.js"></script>'
