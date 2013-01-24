@@ -25,3 +25,22 @@
 	height:inherit;
 	float:left;
 }
+
+.messageTextArea {
+    padding: 0;
+}
+.newThreadContainer {
+    border: 1px solid;
+    display: none;
+}
+.threadContainer {
+    min-height: 50px;
+    margin: 10px;
+    padding: 3px 9px;
+}
+.threadText {
+    border: 1px #DDD;
+}
+.userLink {
+    cursor: pointer;
+}
