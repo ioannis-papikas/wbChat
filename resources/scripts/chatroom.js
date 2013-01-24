@@ -61,4 +61,26 @@ jq(document).one("ready", function() {
 			}
 		});
 	});
+        
+        /* Assign click handlers to the user links in the sidebar list. */
+//        jq('#usersList .userLink').click(function(event) {
+//            event.preventDefault();
+//            event.stopPropagation();
+//            
+//            var otherUserId = jq(this).attr('href');
+//            
+//            jq.ajax({
+//                data: 'otherUserId=' + otherUserId
+//                ,dataType: 'html'
+//                ,error: function(jqXHR, textStatus, errorThrown) {
+//                    console.log(textStatus);
+//                    console.log(errorThrown);
+//                }
+//                ,success: function(data, textStatus, jqXHR) {
+//                    jq('#messageCenter').append(data);
+//                }
+//                ,type: 'GET'
+//                ,url: _hostRoot + '/async/messages/create.php'
+//            });
+//        });
 });
