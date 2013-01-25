@@ -71,7 +71,7 @@ class ThreadModel {
         /* Store the newly created Thread's info to this Thread. */
         $this->setDateCreated($dateCreated);
         $this->setSubject($subject);
-        $this->setThreadTypeId($threadType['id']);
+        $this->setThreadTypeId((int) $threadType['id']);
 
         /* Save the Thread to the database. */
         $sqc = new SqlBuilder();
@@ -84,14 +84,14 @@ class ThreadModel {
                 ), array(
                     'NULL',
                     $threadType['id'], 
-                    $subject, 
-                    $dateCreated
+                    '"' . $subject . '"', 
+                    '"' . $dateCreated . '"'
                 ));
         $dbc = new dbConnection();
         $sqlQuery = new sqlQuery();
         $sqlQuery->set_query($threadQuery);
-        $dbc->execute_query();
-        $dbLink = $dbc->getConnector()->getConnection();
+        $dbc->execute_query($sqlQuery);
+        $dbLink = $dbc->getConnection();
         $threadId = mysqli_insert_id($dbLink);
         
         $threadRecipientsModel = new ThreadRecipientsModel();
