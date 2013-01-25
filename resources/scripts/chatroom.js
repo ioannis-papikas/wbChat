@@ -45,7 +45,7 @@ jq(document).one("ready", function() {
 		
 		// Call Thread Viewer Control (Ajax)
 		jq.ajax({
-			url: _hostRoot+"/async/messages/load.php",
+			url: _hostRoot+"/async/threads/load.php",
 			data: url_var,
 			type: "GET",
 			dataType: "html",

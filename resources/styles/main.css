@@ -57,11 +57,17 @@ a, a.visited {
 	height:25px;
 }
 .navItem a {
+	text-decoration:none;
+	color:#3871E0;
 	width:100%;
 	display:block;
 	box-sizing:border-box;
 	-webkit-box-sizing:border-box;
 	-moz-box-sizing:border-box;
+}
+.navItem a.visited {
+	text-decoration:none;
+	color:#3871E0;
 }
 .navItem:hover {
 	background-color:rgba(166, 166, 166, 0.2);

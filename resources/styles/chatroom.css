@@ -19,16 +19,18 @@
 	box-sizing:border-box;
 	-webkit-box-sizing:border-box;
 	-moz-box-sizing:border-box;
-	width:25%;
+	width:30%;
 	min-width:200px;
 }
 .thread {
 	height:75px;
 	padding:5px;
+	padding-left:20px;
 	box-sizing:border-box;
 	-webkit-box-sizing:border-box;
 	-moz-box-sizing:border-box;
 	border-bottom:1px solid rgba(166, 166, 166, 1);
+	cursor: default;
 }
 .thread:hover {
 	background-color:#EEE;
@@ -39,30 +41,35 @@
 .thread > .userName {
 	font-weight:bold;
 	font-size:110%;
+	float:left;
+	margin-bottom:10px;
+}
+.thread .threadDate {
+	float:right;
+	color:grey;
 }
 .thread > .threadContent {
 	overflow:auto;
+	clear:both;
 }
 .thread .threadSubject {
 	float:left;
 	font-weight:bold;
 	max-width:
 }
-.thread .threadDate {
-	float:right;
-	font-style:italic;
-}
 .threadSnippet {
 	clear:both;
-	padding:3px;
+	color:rgb(166, 166, 166);
+	max-height:25px;
+	overflow:hidden;
+	text-overflow: ellipsis;
 }
 
 .messageList {
 	float:left;
-	width:75%;
+	width:70%;
 	height:100%;
 }
-
 .messageTextArea {
     padding: 0;
 }
