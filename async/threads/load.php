@@ -3,8 +3,6 @@
 // Require System Configuration
 require_once("../../_config.php");
 
-print_r($_GET);
-
 // Import
 importer::importCore("messages::thread");
 importer::importCore("ui::threadItem");

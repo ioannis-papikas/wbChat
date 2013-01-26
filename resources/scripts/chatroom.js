@@ -86,13 +86,25 @@ jq(document).one("ready", function() {
 			dataType: "html",
 			success: function(data) {
 				// Append Messages
-				jq(data).appendTo(jq("#messageList").empty());
+				console.log(data);
+				
+				if (jq("#messageList").contents().length != 0)
+				{
+					jq("#messageList").find('.messages').empty().replaceWith(jq(data).get(0));
+					//jq(data).get(0).children.appendTo();
+				}
+				else
+				{
+					jq(data).appendTo(jq("#messageList").empty());
+				}
+				
+				jq("#sendMessage").removeAttr("disabled");
 				
 				// Trigger window resize to set messageList height
 				jq(window).trigger("resize");
 				
 				// Scroll messageList to bottom
-				var height = jq('.messages')[0].scrollHeight;
+				var height = jq('.messages').get(0).scrollHeight;
 				jq('.messages').scrollTop(height);
 				
 			},
@@ -148,7 +160,7 @@ jq(document).one("ready", function() {
 			dataType: "html",
 			success: function(data) {
 				// Debugging
-				//jq('.textInput').children('textarea').first().val("");
+				jq('.textInput').children('textarea').first().val("");
 				jq('.thread.selected').trigger("click");
 				
 			},
@@ -162,19 +174,30 @@ jq(document).one("ready", function() {
 	});
 	
 	// Refresh message list interval
-	var refreshMessages = setInterval(function() {
+	var refreshMessagesInterval;
+	
+	var refreshMessages = function() {
+		console.log("refreshing...");
 		jq('.thread.selected').trigger("click");
-    }, 5000);
+	}
 	
 	jq(document).on("keydown", "#threadMessage", function(ev) {
+		clearInterval(refreshMessagesInterval);
+		
 		if (ev.which == 13)
 		{
+			console.log("sending...");
 			// Prevent Default Action
 			ev.preventDefault();
 			
 			// Press send Button
 			jq(this).closest('form').find('button').trigger("click");
 		}
+	});
+	
+	jq(document).on("keyup", "#threadMessage", function(ev) {
+		clearInterval(refreshMessagesInterval);
+		refreshMessagesInterval = setInterval(refreshMessages, 5000);
 	});
 	
 	
