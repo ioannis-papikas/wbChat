@@ -18,7 +18,7 @@ importer::importCore("messages::thread");
 
 class message
 {
-	public static function get_messages($threadID, $limit = 50)
+	public static function get_messages($threadID)
 	{
 		// Get User profile
 		$profile = user::profile();
@@ -30,8 +30,7 @@ class message
 					INNER JOIN user ON user.id = message.author_id
 					WHERE userMessage.owner_id = ".$profile['id']."
 					AND message.thread_id = ".$threadID."
-					ORDER BY message.dateCreated ASC
-					LIMIT ".$limit;
+					ORDER BY message.dateCreated ASC";
 
 		// Set SQL Query Value
 		$sq = new sqlQuery();

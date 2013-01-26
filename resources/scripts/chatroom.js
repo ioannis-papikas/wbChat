@@ -66,8 +66,6 @@ jq(document).one("ready", function() {
 		// Stop Bubling
 		ev.preventDefault();
 		
-		//clearInterval(refreshMessagesInterval);
-		
 		// Set all threads unselected
 		jq('.thread').removeClass('selected');
 		
