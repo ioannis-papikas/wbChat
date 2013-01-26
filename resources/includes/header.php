@@ -68,7 +68,7 @@ if (!is_null($profile))
 if (!is_null($profile))
 {
 	// Create Chat Control's Menu
-	$chatMenu = $dom->create("div", "", "chatControls", "navMenu");
+	$chatMenu = $dom->create("div", "", "navControls", "navMenu");
 	$dom->append($container, $chatMenu);
 	
 	// New Thread Item
@@ -85,19 +85,7 @@ if (!is_null($profile))
 	// Create Chat Folders
 	$navItem = $dom->create("li", "", "", "navItem");
 	$dom->append($chatMenu, $navItem);
-	$navItemA = $dom->create("a", "Όλα τα μηνύματα", "view_all", "navLink");
-	$dom->attr($navItemA, "href", "#");
-	$dom->append($navItem, $navItemA);
-	
-	$navItem = $dom->create("li", "", "", "navItem");
-	$dom->append($chatMenu, $navItem);
-	$navItemA = $dom->create("a", "Εισερχόμενα", "view_inbox", "navLink");
-	$dom->attr($navItemA, "href", "#");
-	$dom->append($navItem, $navItemA);
-	
-	$navItem = $dom->create("li", "", "", "navItem");
-	$dom->append($chatMenu, $navItem);
-	$navItemA = $dom->create("a", "Απεσταλμένα", "view_outbox", "navLink");
+	$navItemA = $dom->create("a", "Όλα τα μηνύματα", "all", "navLink");
 	$dom->attr($navItemA, "href", "#");
 	$dom->append($navItem, $navItemA);
 }

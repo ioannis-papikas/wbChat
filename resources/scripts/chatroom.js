@@ -19,7 +19,7 @@ jq(document).one("ready", function() {
 		
 		// Call Thread Viewer Control (Ajax)
 		jq.ajax({
-			url: _hostRoot+"/async/messages/create.php",
+			url: _hostRoot+"/async/threads/create.php",
 			type: "GET",
 			dataType: "html",
 			success: function(data) {
@@ -35,7 +35,7 @@ jq(document).one("ready", function() {
 	});
 	
 	// Chat Navigation Controller
-	jq(".navLink").on("click", function(ev) {
+	jq(document).on("click", ".navLink", function(ev) {
 		
 		// Stop Bubling
 		ev.preventDefault();
@@ -61,26 +61,125 @@ jq(document).one("ready", function() {
 			}
 		});
 	});
-        
-        /* Assign click handlers to the user links in the sidebar list. */
-//        jq('#usersList .userLink').click(function(event) {
-//            event.preventDefault();
-//            event.stopPropagation();
-//            
-//            var otherUserId = jq(this).attr('href');
-//            
-//            jq.ajax({
-//                data: 'otherUserId=' + otherUserId
-//                ,dataType: 'html'
-//                ,error: function(jqXHR, textStatus, errorThrown) {
-//                    console.log(textStatus);
-//                    console.log(errorThrown);
-//                }
-//                ,success: function(data, textStatus, jqXHR) {
-//                    jq('#messageCenter').append(data);
-//                }
-//                ,type: 'GET'
-//                ,url: _hostRoot + '/async/messages/create.php'
-//            });
-//        });
+	
+	jq(document).on('click', '.thread', function(ev) {
+		// Stop Bubling
+		ev.preventDefault();
+		
+		// Set all threads unselected
+		jq('.thread').removeClass('selected');
+		
+		// Set this thread selected
+		jq(this).addClass('selected');
+		
+		// Disable button
+		jq("#sendMessage").attr("disabled", "disabled");
+		
+		// Call Parameters
+		var url_var = "tid="+jq(this).data("tid");
+		
+		// Call Message Viewer Control (Ajax)
+		jq.ajax({
+			url: _hostRoot+"/async/messages/load.php",
+			data: url_var,
+			type: "GET",
+			dataType: "html",
+			success: function(data) {
+				// Append Messages
+				jq(data).appendTo(jq("#messageList").empty());
+				
+				// Trigger window resize to set messageList height
+				jq(window).trigger("resize");
+				
+				// Scroll messageList to bottom
+				var height = jq('.messages')[0].scrollHeight;
+				jq('.messages').scrollTop(height);
+				
+			},
+			complete: function(ev) {
+			},
+			error: function(ev) {
+			}
+		});
+	});
+	
+	// Create New Thread
+	jq(document).on("click", "#newThread", function(ev) {
+		// Stop Bubling
+		ev.preventDefault();
+		
+		// Get Parameters
+		var postVars = jq(this).closest('form').serialize();
+		
+		// Call Message Viewer Control (Ajax)
+		jq.ajax({
+			url: _hostRoot+"/async/threads/create.php",
+			data: postVars,
+			type: "POST",
+			dataType: "html",
+			success: function(data) {
+				// Debugging
+				console.log(data);
+				//jq(data).appendTo(jq("#messageList").empty());
+				
+			},
+			complete: function(ev) {
+			},
+			error: function(ev) {
+				console.log(ev);
+			}
+		});
+		
+	});
+	
+	// Send Thread Message
+	jq(document).on("click", "#sendMessage", function(ev) {
+		// Stop Bubling
+		ev.preventDefault();
+		
+		// Get Parameters
+		var postVars = jq(this).closest('form').serialize();
+		
+		// Call Message Viewer Control (Ajax)
+		jq.ajax({
+			url: _hostRoot+"/async/messages/send.php",
+			data: postVars,
+			type: "POST",
+			dataType: "html",
+			success: function(data) {
+				// Debugging
+				//jq('.textInput').children('textarea').first().val("");
+				jq('.thread.selected').trigger("click");
+				
+			},
+			complete: function(ev) {
+			},
+			error: function(ev) {
+				console.log(ev);
+			}
+		});
+		
+	});
+	
+	// Refresh message list interval
+	var refreshMessages = setInterval(function() {
+		jq('.thread.selected').trigger("click");
+    }, 5000);
+	
+	jq(document).on("keydown", "#threadMessage", function(ev) {
+		if (ev.which == 13)
+		{
+			// Prevent Default Action
+			ev.preventDefault();
+			
+			// Press send Button
+			jq(this).closest('form').find('button').trigger("click");
+		}
+	});
+	
+	
+	jq(window).on('resize', function(ev) {
+		var value = jq("#messageList").outerHeight() - jq("#chatControls").outerHeight();
+		jq(".messages").height(value);
+	});
 });

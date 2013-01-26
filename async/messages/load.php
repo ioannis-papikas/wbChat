@@ -3,21 +3,42 @@
 // Require System Configuration
 require_once("../../_config.php");
 
-// Create User's List According to message inbox
+importer::importCore("messages::message");
+importer::importCore("ui::messageList");
 
+
+$threadID = $_GET['tid'];
+$messages = message::get_messages($threadID);
 // Get Message Viewer Controller
 
+// Build messageList
+$messageList = new messageList();
+
+$lastAuthor = NULL;
+foreach ($messages as $message)
+{
+	if ($message['author'] != $lastAuthor)
+	{
+		$lastAuthor = $message['author'];
+		$messageList->add_message($message['author'], $message['date'], $message['content']);
+	}
+	else
+		$messageList->append_message($message['date'], $message['content']);
+}
+
+echo $messageList->getHTML();
 ?>
-<div id="chatroom" class="chatroom">
-	<div id="threadList" class="threadList">
-		<div class="thread">
-			<div class="userName">Ioannis Papikas</div>
-			<div class="threadContent">
-				<span class="threadSubject">Subject</span>
-				<span class="threadDate">Date</span>
-				<div class="threadSnippet">Snippet</div>
-			</div>
+<form method="post">
+	<?php
+		// Set Hidden threadid
+		echo "<input name=\"tid\" type=\"hidden\" value=\"".$threadID."\" />";
+	?>
+	<div id="chatControls">
+		<div class="textInput">
+			<textarea id="threadMessage" name="message" placeholder="Write your message here..." autofocus="autofocus"></textarea>
+		</div>
+		<div class="inputControls">
+			<button id="sendMessage" type="button" class="uiFormButton chat" >Send</button>
 		</div>
 	</div>
-	<div id="messageList" class="messageList">Message List</div>
-</div>
+</form>

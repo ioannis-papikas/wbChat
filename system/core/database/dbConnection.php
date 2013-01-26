@@ -43,7 +43,7 @@ class dbConnection {
     }
 
     // Executes a general transaction
-    public function execute_transaction($dbQueries, $attr = array())
+    public function execute_transaction($dbQueries)
 	{
         if (!is_array($queries))
             $this->execute_query($dbQueries);

@@ -14,58 +14,132 @@ if (!defined("_WBCHAT_PLATFORM_"))
 importer::importCore("database::dbConnection");
 importer::importCore("database::sqlbuilder");
 importer::importCore("database::sqlQuery");
+importer::importCore("profile::user");
 
 class thread {
 
-    public function get_threads();
+	/*
+	 * Return all user's threads in a given model:
+	 *
+	 * [id] = threadid
+	 * [subject] = thread subject
+	 * [recipient] = thread recipient
+	 * [snippet] = thread's last message body
+	 */
+    public static function get_threads($type = "all")
+	{
+		// Get User profile
+		$profile = user::profile();
+		
+		$threadArray = array();
+		$query = "SELECT
+					thread.*,
+					userThread.read,
+					message.content as lastMessage,
+					message.dateCreated as lastMessageDate,
+					user.username as recipient
+				FROM thread
+				INNER JOIN userThread ON userThread.thread_id = thread.id
+				INNER JOIN message ON message.thread_id = thread.id
+				INNER JOIN userMessage ON userMessage.message_id = message.id
+				INNER JOIN threadRecipients ON threadRecipients.thread_id = thread.id
+				INNER JOIN user ON user.id = threadRecipients.recipient_id
+				WHERE userThread.user_id = ".$profile['id']."
+				AND userMessage.owner_id = ".$profile['id']."
+				GROUP BY thread.id
+				ORDER BY message.dateCreated DESC";
+		
+		// Set SQL Query Value
+		$sq = new sqlQuery();
+		$sq->set_query($query);
 
-    public function get_recipients($thread);
+		// Execute Query
+		$dbc = new dbConnection();
+		$result = $dbc->execute_query($sq);
+		
+		while ($thr = $dbc->fetch($result))
+		{
+			$threadObj = array();
+			$threadObj['id'] = $thr['id'];
+			$threadObj['subject'] = $thr['subject'];
+			$threadObj['read'] = $thr['read'];
+			$threadObj['snippet'] = $thr['lastMessage'];
+			$threadObj['date'] = $thr['lastMessageDate'];
+			$threadObj['recipient'] = $thr['recipient'];
+			
+			$threadArray[] = $threadObj;
+		}
+		
+		return $threadArray;
+	}
 
-    public static function create($type, $subject, $recipients) {
-        $dateCreated = date('Y-m-d H:i:s', time());
+    public static function get_recipients($threadID)
+	{
+		// Initialize Objects
+		$dbc = new dbConnection();
+		$dbq = new sqlQuery();
+		
+		$dbq->set_query("SELECT * FROM threadRecipients WHERE thread_id = ".$threadID);
+		$result = $dbc->execute_query($dbq, $isTransaction = 1);
+		
+		$rec = array();
+		while ($row = $dbc->fetch($result))
+			$rec[] = $row['recipient_id'];
+		
+		return $rec;
+	}
 
-        /* Save the Thread to the database. */
-        $sqc = new SqlBuilder();
-        $threadQuery = $sqc->getInsertStatement('thread', 
-                array('threadType_id', 'subject', 'dateCreated'), 
-                array($type, $subject, $dateCreated));
-        $dbc = new dbConnection();
-        $dbc->execute_query(new sqlQuery($threadQuery));
-        $dbLink = $dbc->getConnection();
-        $threadId = mysqli_insert_id($dbLink);
-
-        foreach ($recipients as $recipientId)
-            self::add_recipient($threadId, $recipientId);
+    public static function create($recipients, $subject, $message) {
+		
+		// Get User Profile
+		$profile = user::profile();
+		
+		// Initialize Objects
+		$dbc = new dbConnection();
+		$dbq = new sqlQuery();
+		
+		// Create SQL Query
+		$query = "";
+		
+		// _____ Create Thread
+		date_default_timezone_set("UTC");
+		$dateCreated = date('Y-m-d H:i:s', time());
+		$query .= "INSERT INTO thread (subject, dateCreated) VALUES ('".$subject."', '".$dateCreated."');";
+		$query .= "SELECT LAST_INSERT_ID() INTO @threadID;";
+		
+		// _____ Insert all recipients
+		foreach ($recipients as $recID)
+			$query .= "INSERT INTO threadRecipients (thread_id, recipient_id) VALUES (@threadID, ".$recID.");";
+		
+		// _____ Insert ME as recipient
+		$query .= "INSERT INTO threadRecipients (thread_id, recipient_id) VALUES (@threadID, ".$profile['id'].");";
+		
+		// _____ Copy Thread for every recipient
+		// _____ For ME
+		$query .= "INSERT INTO userThread (thread_id, user_id, `read`) VALUES (@threadID, ".$profile['id'].", 1);";
+		foreach ($recipients as $recID)
+			$query .= "INSERT INTO userThread (thread_id, user_id, `read`) VALUES (@threadID, ".$recID.", 0);";
+			
+		// _____ Create Message
+		$query .= "INSERT INTO message (thread_id, author_id, content, dateCreated) VALUES (@threadID, ".$profile['id'].", '".$message."', '".$dateCreated."');";
+		$query .= "SELECT LAST_INSERT_ID() INTO @messageID;";
+		
+		// _____ Copy Message for every recipient
+		// _____ For ME
+		$query .= "INSERT INTO userMessage (message_id, owner_id, `read`) VALUES (@messageID, ".$profile['id'].", 1);";
+		foreach ($recipients as $recID)
+			$query .= "INSERT INTO userMessage (message_id, owner_id, `read`) VALUES (@messageID, ".$recID.", 0);";
+			
+		// Execute Query
+		$dbq->set_query($query);
+		$result = $dbc->execute_query($dbq, $isTransaction = 1);
+		
+		return $result;
     }
 
-    public function delete($thread);
-
-    public function move($thread, $folder);
-
-    public static function add_recipient($threadId, $recipientId) {
-        if ($recipientId === null)
-            throw new InvalidArgumentException('Recipient not given.');
-
-        if (empty($threadId) || ($threadId < 0))
-            throw new InvalidArgumentException(
-                'Invalid thread ID: ' . $threadId);
-
-        // Create SQL Query
-        $sqc = new SqlBuilder();
-        $query = $sqc->getInsertStatement('threadrecipients', 
-                array('thread_id', 'recipient_id'), 
-                array($threadId, $recipientId));
-
-        // Set SQL Query Value
-        $sq = new sqlQuery();
-        $sq->set_query($query);
-
-        // Execute Query
-        $dbc = new dbConnection();
-        $dbc->execute_query($sq, 0);
-    }
-
-    public function remove_recipient($thread, $recipient);
+    public function delete($thread)
+	{
+	}
 
     public static function get_type($description) {
         if ($description === null)
@@ -93,14 +167,6 @@ class thread {
 
         return FALSE;
     }
-
-    public function add_type($description);
-
-    public function remove_type($type);
-
-    public function add_folder($owner, $description);
-
-    public function remove_folder($folder);
 }
 
 ?>

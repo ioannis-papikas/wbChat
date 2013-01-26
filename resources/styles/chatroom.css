@@ -69,6 +69,7 @@
 	float:left;
 	width:70%;
 	height:100%;
+	position:relative;
 }
 .messageTextArea {
     padding: 0;
@@ -87,4 +88,105 @@
 }
 .userLink {
     cursor: pointer;
+}
+#chatControls {
+	position:absolute;
+	left: 0px;
+	bottom:0px;
+	width:100%;
+	padding:20px;
+	box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	background-color:#EEE;
+	border-top:1px solid #DDD;
+}
+
+/* Chat Messaging */
+#chatControls h2, #chatControls h3 {
+	float:left;
+	margin:0px;
+	margin-bottom:10px;
+}
+#chatControls .recipients {
+	float:right;
+}
+#chatControls .textInput {
+	width:100%;
+}
+.textInput input {
+	width:100%;
+	margin:0px;
+	margin-bottom:10px;
+	padding:5px;
+	outline:none;
+	border:1px solid #DDD;
+}
+.textInput textarea {
+	width:100%;
+	margin:0px;
+	padding:5px;
+	resize:none;
+	outline:none;
+	border:1px solid #DDD;
+	min-height:60px;
+}
+#chatControls .inputControls {
+	float:right;
+	box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	margin-top:10px;
+}
+#chatControls .inputControls .uiFormButton.chat {
+	box-shadow:none;
+	background-color:#DDD;
+	border:1px solid #CCC;
+	margin: 0px;
+}
+
+/* Chat Messages */
+.messages {
+	overflow:auto;
+}
+.messageGroup {
+	padding:15px;
+	box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+}
+.messageGroup .author {
+	font-weight:bold;
+	font-size:110%;
+	margin-bottom:10px;
+	color:#999;
+}
+.messageGroup:nth-child(even) {
+	background-color:#EEE;
+	border-top:1px solid #DDD;
+	border-bottom:1px solid #DDD;
+	box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+}
+.messageGroup:nth-child(odd) {
+	background-color:#FFF;
+}
+.message {
+	overflow:auto;
+	margin-bottom:10px;
+	box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+}
+.message > .msgContent {
+	float:left;
+	max-width:75%;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow:hidden;
+}
+.message > .msgTime {
+	float:right;
+	max-width:20%;
 }

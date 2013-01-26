@@ -110,28 +110,6 @@ class user {
     protected static function _clear_session() {
         session::clear_set('user');
     }
-
-    //
-    public static function getUsers($exceptIds = array()) {
-        $exceptIds = implode(', ', $exceptIds);
-        
-        $sqc = new SqlBuilder();
-        $sqc->selectTableColumns('user', 
-                array('id', 'username'), 
-                array('', ''))
-            ->from('user');
-        if (!empty($exceptIds)) {
-            $sqc->where('`id` NOT IN (' . $exceptIds . ')');
-        }
-        $sqc->createQuery();
-
-        $dbc = new dbConnection();
-        $query = new sqlQuery();
-        $query->set_query($sqc->getQuery());
-        
-        return $dbc->execute_query($query);
-    }
-
 }
 
 ?>
