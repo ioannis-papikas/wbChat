@@ -18,7 +18,7 @@ importer::importCore("messages::thread");
 
 class message
 {
-	public function get_messages($threadID, $limit = 50)
+	public static function get_messages($threadID, $limit = 50)
 	{
 		// Get User profile
 		$profile = user::profile();

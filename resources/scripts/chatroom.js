@@ -66,6 +66,8 @@ jq(document).one("ready", function() {
 		// Stop Bubling
 		ev.preventDefault();
 		
+		clearInterval(refreshMessagesInterval);
+		
 		// Set all threads unselected
 		jq('.thread').removeClass('selected');
 		
@@ -177,12 +179,10 @@ jq(document).one("ready", function() {
 	var refreshMessagesInterval;
 	
 	var refreshMessages = function() {
-		console.log("refreshing...");
 		jq('.thread.selected').trigger("click");
 	}
 	
 	jq(document).on("keydown", "#threadMessage", function(ev) {
-		clearInterval(refreshMessagesInterval);
 		
 		if (ev.which == 13)
 		{
