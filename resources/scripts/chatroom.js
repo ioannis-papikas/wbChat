@@ -66,7 +66,7 @@ jq(document).one("ready", function() {
 		// Stop Bubling
 		ev.preventDefault();
 		
-		clearInterval(refreshMessagesInterval);
+		//clearInterval(refreshMessagesInterval);
 		
 		// Set all threads unselected
 		jq('.thread').removeClass('selected');
@@ -183,10 +183,10 @@ jq(document).one("ready", function() {
 	}
 	
 	jq(document).on("keydown", "#threadMessage", function(ev) {
+		clearInterval(refreshMessagesInterval);
 		
 		if (ev.which == 13)
 		{
-			console.log("sending...");
 			// Prevent Default Action
 			ev.preventDefault();
 			
